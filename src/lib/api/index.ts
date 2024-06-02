@@ -1,6 +1,8 @@
 import type { Prompt } from "$lib/types";
 
-export interface ApiResponse {}
+export interface ApiResponse {
+    images: [string];
+}
 
 export async function generate(prompt: Prompt): Promise<ApiResponse> {
     const body = prompt;
