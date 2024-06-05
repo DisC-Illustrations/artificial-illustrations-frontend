@@ -3,12 +3,13 @@
     import { type Prompt, PromptSchema } from "$lib/types";
     import { superForm } from "sveltekit-superforms";
     import { zod } from "sveltekit-superforms/adapters";
-    import {string} from "zod";
-    import {onMount} from "svelte";
+    import { string } from "zod";
+    import { onMount } from "svelte";
+    import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
 
     export let data: PageServerData;
 
-    $: images = []
+    $: images = [];
 
     const formData: Prompt = data.prompt;
 
@@ -33,12 +34,3 @@
         },
     });
 </script>
-
-<div>
-    <h1 class="font-sans font-medium">{data.prompt.prompt}</h1>
-    <form method="POST" use:enhance>
-        <input type="text" value={$form.prompt} placeholder={$form.prompt} />
-        <button type="submit">test</button>
-    </form>
-
-</div>
