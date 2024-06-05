@@ -9,3 +9,9 @@ export const PromptSchema = z.object({
 });
 
 export type Prompt = z.infer<typeof PromptSchema>;
+
+export interface Style {
+    name: string;
+    src: string;
+    prompt: string;
+}

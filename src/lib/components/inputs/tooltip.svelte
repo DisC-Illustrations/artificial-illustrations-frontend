@@ -15,7 +15,7 @@
             transition={fly}
             transitionConfig={{ y: 8, duration: 150 }}
             {sideOffset}
-            class="border-[1px] border-border bg-bgLight px-3 py-[5px] outline-none rounded-md min-w-[90px]"
+            class="border border-border bg-bgLight px-3 py-[5px] outline-none rounded-md min-w-[90px]"
         >
             <Tooltip.Arrow
                 class="rounded-[2px] !bg-bgLight border-l-[1px] border-t-[1px] border-border"

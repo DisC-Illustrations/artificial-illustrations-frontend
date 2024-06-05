@@ -43,7 +43,7 @@
             {disabled}
             on:input={setInput}
             class="block w-full bg-bgLight text-sm placeholder:text-border leading-none relative
-                border-[1px] border-border rounded-2xl focus:ring-lightBlue py-3 px-4 focus:border-lightBlue"
+                border border-border rounded-2xl focus:ring-lightBlue py-3 px-4 focus:border-lightBlue"
         />
     </div>
     <p class={`${error ? "visible" : "hidden"} text-xs text-red-600 mt-2`}>
