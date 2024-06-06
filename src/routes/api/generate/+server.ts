@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const POST: RequestHandler = async ({ request }) => {
     const { prompt } = await request.json();
-    const apiKey = 'sk-proj-BImv892UblINFz4BovXrT3BlbkFJDxBkqzVHrrbqxqy0LuPl';
+    const apiKey = 'API_KEY';
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
