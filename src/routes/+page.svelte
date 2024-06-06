@@ -22,18 +22,15 @@
         invalidateAll: false,
         onUpdated: async ({ form }) => {
             if (form.valid) {
-                const response = await fetch("/api/generate", {
+                const response = await fetch("/api/", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                     body: JSON.stringify({
-                        prompt: inputText,
+                        formData,
                     }),
                 });
 
-                const data = await response.json();
-                responseText = data.text;
+                // const data = await response.json();
+
                 // images = data;
             }
         },
