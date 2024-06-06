@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const POST: RequestHandler = async ({ request }) => {
     const { prompt } = await request.json();
-    const apiKey = 'API_KEY';
+    const Key = "KEY";
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
@@ -16,7 +16,7 @@ export const POST: RequestHandler = async ({ request }) => {
             presence_penalty: 0,
         }, {
             headers: {
-                'Authorization': `Bearer ${apiKey}`,
+                'Authorization': `Bearer ${Key}`,
                 'Content-Type': 'application/json'
             }
         });
