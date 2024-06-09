@@ -1,5 +1,8 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import axios from 'axios';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const POST: RequestHandler = async ({ request }) => {
     const { prompt } = await request.json();
@@ -15,7 +18,7 @@ export const POST: RequestHandler = async ({ request }) => {
             presence_penalty: 0,
         }, {
             headers: {
-                'Authorization': `Bearer `,
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
                 'Content-Type': 'application/json'
             }
         });
