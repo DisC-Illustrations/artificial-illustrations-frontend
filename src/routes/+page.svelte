@@ -1,6 +1,4 @@
 <script lang="ts">
-    import  "./style/loading.css";
-
     import type {PageServerData} from "./$types";
     import {type Prompt, PromptSchema} from "$lib/types";
     import {superForm} from "sveltekit-superforms";
@@ -9,6 +7,8 @@
     import {onMount} from "svelte";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import TextArea from "$lib/components/inputs/text-area.svelte";
+    import LoadingWave from "$lib/components/loading/loading-wave.svelte";
+    import GradientLoader from "$lib/components/loading/loading-circle-gradient.svelte";
 
 
     export let data: PageServerData;
@@ -99,16 +99,5 @@
     </div>
 {/if}
 {#if loading}
-    <div class="loading-animation">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-    </div>
+    <LoadingWave />
 {/if}
