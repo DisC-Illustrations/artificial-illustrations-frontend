@@ -1,0 +1,57 @@
+/* src/app.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Deine benutzerdefinierten CSS-Regeln */
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
+    background-color: theme('colors.bg');
+    color: theme('colors.text');
+    font-family: 'Poppins', sans-serif;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 0.5rem;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select,
+.input-group button {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: none;
+}
+
+.settings-menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+.input-group button {
+    background-color: theme('colors.lightBlue');
+    color: white;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: theme('colors.darkBlue');
+}
+ */

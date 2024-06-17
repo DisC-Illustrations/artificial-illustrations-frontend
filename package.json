@@ -30,6 +30,7 @@
         "axios": "^1.7.2",
         "dotenv": "^16.4.5",
         "flowbite": "^2.3.0",
-        "flowbite-svelte": "^0.46.1"
+        "flowbite-svelte": "^0.46.1",
+        "mammoth": "^1.8.0"
     }
 }

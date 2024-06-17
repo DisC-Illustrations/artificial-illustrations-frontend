@@ -36,8 +36,7 @@
     <br />
     Inputs:
     <Tooltip tooltipText="Hier steht Text"></Tooltip>
-    <TextInput name="text" placeholder="Hier kommt Text hin"></TextInput>
-    <TextArea name="textarea" placeholder="Hier kommt der Artikel hin"
-    ></TextArea>
+    <TextInput name="text" placeholder="Hier kommt Text hin" value=""></TextInput>
+    <TextArea name="textarea" placeholder="Hier kommt der Artikel hin" value=""></TextArea>
     <SelectStyle {styles}></SelectStyle>
 </div>

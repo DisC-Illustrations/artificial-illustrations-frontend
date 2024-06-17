@@ -1,10 +1,14 @@
 import { generate } from "$lib/api";
 import type { RequestEvent } from "@sveltejs/kit";
+import type {Prompt} from "$lib/types";
 
-export async function POST(event: RequestEvent) {
-    const { prompt } = await event.request.json();
+export const POST = async (event: RequestEvent) => {
+    const prompt: Prompt = JSON.parse(await event.request.arrayBuffer().then((buffer) => new TextDecoder().decode(buffer)));
+    const response = await generate(prompt);
 
-    const images = await generate(prompt);
+    return {
+        status: 200,
+        body: response.images,
+    };
 
-    return new Response(JSON.stringify(images), { status: 200 });
 }
