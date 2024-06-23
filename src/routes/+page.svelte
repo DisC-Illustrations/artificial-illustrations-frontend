@@ -4,7 +4,7 @@
     import type {PageServerData} from "./$types";
     import {AdditionalSettings, type Prompt} from "$lib/types";
     import mammoth from "mammoth";
-    import LoadingWave from "$lib/components/loading/loading-wave.svelte";
+    import LoadingCircleGradient from "\$lib/components/loading/loading-circle-gradient.svelte";
     import SelectStyle from "$lib/components/inputs/select-style.svelte";
     import SelectColor from "$lib/components/inputs/select-color.svelte";
     import Tooltip from "$lib/components/inputs/tooltip.svelte";
@@ -13,13 +13,13 @@
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import {ResourceLoader} from "$lib/utils/resource_loader";
+    import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
 
 
     export let data: PageServerData;
 
-    const formData: Prompt = data.prompt;
+    let formData: Prompt | null = null;
 
-    // Reactive variables
     let styles = ResourceLoader.loadStyles();
     let articleText = "";
     let selectedStyle = "style1";
@@ -27,8 +27,6 @@
     let specificRequest = "";
     let settings = new AdditionalSettings();
     let imageData = "";
-    // array of string pairs
-    let images: { src: string, alt: string }[] = [];
 
     // boolean to show/hide elements
     let loading = false;
@@ -76,7 +74,6 @@
 
     // Function to generate images (mockup)
     async function generateImages() {
-        // Set loading to true
         loading = true;
 
         let articlePrompt = "";
@@ -94,7 +91,6 @@
         let aspectResolution = settings.resolution.split("x");
         let aspectRatio = (parseInt(aspectResolution[0]) as number) / (parseInt(aspectResolution[1]) as number);
 
-        // TODO: refactor to use schema validation (zod)
         let prompt: Prompt = {
             prompt: promptText,
             num_images: settings.variations,
@@ -105,47 +101,22 @@
         };
 
         imageData = `Generated image with text: ${articleText}, style: ${selectedStyle}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
+        formData = prompt;
 
-        // fetch images
-        let request = fetch("/api", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(prompt)
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                return data;
-            })
-            .catch(err => {
-                console.error("Fehler beim Abrufen der Bilder: ", err);
-            })
-            .finally(() => {
-                loading = false;
-            });
-
-        // set images
-        let responseImages = await request;
-        images = [];
-        for (let image of responseImages) {
-            images.push({src: image, alt: imageData});
-        }
+        // now GeneratedImages.svelte will handle image retrieval
+        loading = false;
     }
 </script>
 
 <div class="container bg-bg text-text font-sans p-8 space-y-4">
     <div class="image-container">
         <!-- show images here if available -->
-        {#if images.length > 0}
-            {#each images as image}
-                <img src={image.src} alt={image.alt}/>
-            {/each}
-        {:else if loading}
-            <LoadingWave></LoadingWave>
+        {#if loading}
+            <div class="image-wrapper">
+                <LoadingCircleGradient />
+            </div>
         {:else}
-            <p>Keine Bilder verfügbar</p>
+            <GeneratedImages initialPrompt={formData} />
         {/if}
     </div>
 

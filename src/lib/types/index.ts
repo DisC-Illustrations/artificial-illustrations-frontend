@@ -11,7 +11,17 @@ export const PromptSchema = z.object({
     })
 });
 
-export type Prompt = z.infer<typeof PromptSchema>;
+// export type Prompt = z.infer<typeof PromptSchema>;
+export interface Prompt {
+    prompt: string;
+    negative_prompt?: string;
+    num_images?: number;
+    image_size?: number;
+    aspect_ratio?: number;
+    steps?: number;
+    model?: string;
+    upscale?: number;
+}
 
 export interface Style {
     name: string;
@@ -29,4 +39,11 @@ export class AdditionalSettings {
         this.resolution = resolution;
         this.detail = detail;
     }
+}
+
+export interface GeneratedImage {
+    id: number;
+    image: string;
+    prompt: string;
+    negative_prompt?: string;
 }
