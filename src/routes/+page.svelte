@@ -16,8 +16,6 @@
     import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
 
 
-    export let data: PageServerData;
-
     let formData: Prompt | null = null;
 
     let styles = ResourceLoader.loadStyles();
@@ -174,9 +172,9 @@
     </div>
 
     {#if showSettingsMenu}
-        <div class="menu-overlay" on:click={toggleSettingsMenu}>
+        <button class="menu-overlay" on:click={toggleSettingsMenu}>
             <SettingsMenu close={toggleSettingsMenu} settings={settings}/>
-        </div>
+        </button>
     {/if}
 
     <div class="input-group">

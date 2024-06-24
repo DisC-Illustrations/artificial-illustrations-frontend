@@ -58,7 +58,7 @@
 
 {#if generatedImages.length === 0}
     <div class="image-wrapper">
-        <p>No images generated</p>
+        <p>Keine Bilder vorhanden</p>
     </div>
 {:else if loading}
     <div class="image-wrapper">
@@ -91,7 +91,7 @@
     }
 
     .image-container {
-        border: 1px solid #ccc;
+        border: 1px solid theme('colors.lightBlue');
         padding: 1rem;
     }
 
