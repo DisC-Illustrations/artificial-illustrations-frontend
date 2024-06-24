@@ -94,7 +94,7 @@
             num_images: settings.variations,
             image_size: 1024,
             aspect_ratio: aspectRatio,
-            steps: 30,
+            steps: 25,
             upscale: settings.detail
         };
 

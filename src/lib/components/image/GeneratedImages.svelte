@@ -8,16 +8,25 @@
     let generatedImages: GeneratedImage[] = [];
     let error: string | null = null;
     
-    let loading = false;
+    $: loading = false;
 
     async function handleGenerate(requestPrompt: Prompt | null = initialPrompt) {
+        // todo: refactoring for this to be in a not async function
         loading = true;
         if (!requestPrompt) {
             return;
         }
 
         try {
-            generatedImages = await generate(requestPrompt);
+            let results = await generate(requestPrompt);
+
+            for (let image of results) {
+                console.log("Image: ", image.image);
+                image.prompt = requestPrompt.prompt;
+                image.negative_prompt = requestPrompt.negative_prompt;
+            }
+
+            generatedImages = results;
             loading = false;
         } catch (err) {
             loading = false;
