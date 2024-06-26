@@ -2,10 +2,10 @@
     import type {AdditionalSettings} from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
-    import {writable} from "svelte/store";
+    import {type Writable, writable} from "svelte/store";
 
     let showPopup = false;
-    export let settings: AdditionalSettings;
+    export let settings: Writable<AdditionalSettings>;
 
     let detailInput: HTMLInputElement;
 
@@ -23,13 +23,16 @@
     }
 
     function saveSelection() {
-        settings.variations = $selectedVariations;
-        settings.resolution = $selectedFormat;
-        let detail = parseInt(detailInput.value);
-        settings.detail = detail === 3 ? 4 : detail;
-        console.log('Variations:', settings.variations);
-        console.log('Resolution:', settings.resolution);
-        console.log('Detail:', settings.detail);
+        settings.update($settings => {
+            $settings.variations = $selectedVariations;
+            $settings.resolution = $selectedFormat;
+            let detail = parseInt(detailInput.value);
+            $settings.detail = detail === 3 ? 4 : detail;
+
+            console.log('Settings saved:', $settings);
+
+            return $settings;
+        });
         closePopup();
     }
 

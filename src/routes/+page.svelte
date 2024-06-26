@@ -19,12 +19,17 @@
     let formData: Prompt | null = null;
 
     let styles: Style[] = [];
-    let articleText = "";
     let styleSelection = writable<Style | undefined>(undefined);
     let stylePrompt = "";
+
+    let articleText = "";
     let colorPalette = "palette1";
     let specificRequest = "";
-    let settings = new AdditionalSettings();
+
+    let settings = writable<AdditionalSettings>(new AdditionalSettings());
+    let variationSetting: number = 1;
+    let resolutionSetting: string = "1024x1024";
+    let detailSetting: number = 2;
     let imageData = "";
 
     $: styleSelection.subscribe(value => {
@@ -32,6 +37,13 @@
             stylePrompt = value.prompt;
             console.log("Style changed to: ", stylePrompt);
         }
+    });
+
+    $: settings.subscribe(value => {
+        variationSetting = value.variations;
+        resolutionSetting = value.resolution;
+        detailSetting = value.detail;
+        console.log("Settings saved in variables: " + variationSetting + " " + resolutionSetting + " " + detailSetting);
     });
 
     // boolean to show/hide elements
@@ -126,18 +138,18 @@
         }
 
         // calculate aspect ratio
-        let aspectResolution = settings.resolution.split("x");
+        let aspectResolution = resolutionSetting.split("x");
         let aspectRatio = (parseInt(aspectResolution[0]) as number) / (parseInt(aspectResolution[1]) as number);
 
         console.log("Generating image with prompt: " + promptText);
 
         let prompt: Prompt = {
             prompt: promptText,
-            num_images: settings.variations,
+            num_images: variationSetting,
             image_size: 1024,
             aspect_ratio: aspectRatio,
             steps: 25,
-            upscale: settings.detail,
+            upscale: detailSetting,
             color_palette: getSelectedPaletteColors()
         };
 
