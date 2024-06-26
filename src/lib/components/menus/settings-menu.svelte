@@ -49,33 +49,44 @@
         <div class="popup-content">
             <button on:click={closePopup} class="close-button">✕</button>
             <div class="option-group">
-                {#each [1, 2, 3, 4] as variation}
-                    <div
-                            class="option"
-                            class:selected={$selectedVariations === variation}
-                            on:click={() => handleVariationChange(variation)}
-                    >
-                        {variation}
-                    </div>
-                {/each}
+                <label class="settings-label">Variationen</label>
+                <div class="options-row">
+                    {#each [1, 2, 3, 4] as variation}
+                        <div
+                                class="option"
+                                class:selected={$selectedVariations === variation}
+                                on:click={() => handleVariationChange(variation)}
+                        >
+                            {variation}
+                        </div>
+                    {/each}
+                </div>
             </div>
             <div class="option-group">
-                {#each [
-                    {value: "1024x1024", label: "Quadrat"},
-                    {value: "576x1024", label: "Portrait"},
-                    {value: "1024x576", label: "Landschaft"}
-                ] as format}
-                    <div
-                            class="option"
-                            class:selected={$selectedFormat === format.value}
-                            on:click={() => handleFormatChange(format.value)}
-                    >
-                        {format.label}
-                    </div>
-                {/each}
+                <label class="settings-label">Format</label>
+                <div class="options-row">
+                    {#each [
+                        {value: "1024x1024", label: "Quadrat"},
+                        {value: "576x1024", label: "Portrait"},
+                        {value: "1024x576", label: "Landschaft"}
+                    ] as format}
+                        <div
+                                class="option"
+                                class:selected={$selectedFormat === format.value}
+                                on:click={() => handleFormatChange(format.value)}
+                        >
+                            {format.label}
+                        </div>
+                    {/each}
+                </div>
             </div>
-            <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
-            <PrimaryButton on:click={saveSelection}>Speichern</PrimaryButton>
+            <div class="option-group">
+                <label class="settings-label">Detail</label>
+                <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
+            </div>
+            <div class="option-group">
+                <PrimaryButton on:click={saveSelection}>Speichern</PrimaryButton>
+            </div>
         </div>
     </div>
 {/if}
@@ -94,6 +105,7 @@
     }
 
     .popup-content {
+        position: relative;
         background-color: theme('colors.bgLight');
         padding: 20px;
         border-radius: 8px;
@@ -112,10 +124,19 @@
         color: theme('colors.text');
     }
 
+    .settings-label {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 1rem 0 2rem;
+    }
+
     .option-group {
+        margin-bottom: 20px;
+    }
+
+    .options-row {
         display: flex;
         gap: 10px;
-        margin-bottom: 20px;
     }
 
     .option {
