@@ -14,6 +14,7 @@
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import {ResourceLoader} from "$lib/utils/resource_loader";
     import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
+    import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
 
 
     let formData: Prompt | null = null;
@@ -29,6 +30,39 @@
     // boolean to show/hide elements
     let loading = false;
     let showSettingsMenu = false;
+
+    //color palette
+    let palettes = [
+    { name: 'palette1', colors: ['#FFFF00', '#FFA500', '#008000'] },
+    { name: 'palette2', colors: ['#87CEEB', '#FFFFFF', '#4682B4'] },
+    { name: 'palette3', colors: ['#98FB98', '#2E8B57', '#8B4513'] },
+    { name: 'palette4', colors: ['#FFD700', '#FF8C00', '#FF6347'] },
+    { name: 'palette5', colors: ['#FFE4B5', '#D2B48C', '#8B4513'] },
+    { name: 'palette6', colors: ['#DDA0DD', '#9370DB', '#BA55D3'] },
+    { name: 'palette7', colors: ['#FFFFE0', '#FFD700', '#FFA07A'] },
+    { name: 'palette8', colors: ['#2F4F4F', '#708090', '#778899'] },
+    { name: 'palette9', colors: ['#00008B', '#8A2BE2', '#5F9EA0'] }
+  ];
+
+    let selectedPalette = 'palette1';
+
+    function handlePaletteSelect(palette: string) {
+        selectedPalette = palette;
+    }
+
+    function hexToRgb(hex) {
+    let bigint = parseInt(hex.slice(1), 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  }
+
+  function getSelectedPaletteColors() {
+    let palette = palettes.find(p => p.name === selectedPalette);
+    if (palette) {
+      return palette.colors.map(color => ({ rgb: hexToRgb(color) }));
+    }
+    return [];
+  }
+
 
     function toggleSettingsMenu() {
         showSettingsMenu = !showSettingsMenu;
@@ -95,7 +129,8 @@
             image_size: 1024,
             aspect_ratio: aspectRatio,
             steps: 25,
-            upscale: settings.detail
+            upscale: settings.detail,
+            color_palette: getSelectedPaletteColors()
         };
 
         imageData = `Generated image with text: ${articleText}, style: ${selectedStyle}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
@@ -153,19 +188,11 @@
 
     <div class="input-group space-y-2">
         <div class="description">
-            <label for="colorPalette">Farbpalette auswählen</label>
-            <Tooltip
-                    tooltipText="Hier kannst du die Farbpalette auswählen, die für die Bilder verwendet wird."></Tooltip>
+          <label for="colorPalette">Farbpalette auswählen</label>
+          <Tooltip tooltipText="Hier kannst du die Farbpalette auswählen, die für die Bilder verwendet wird."></Tooltip>
         </div>
-        <SelectColor></SelectColor>
-        <!--
-        <select id="colorPalette" class="p-2 rounded border-none bg-bgLight text-text">
-            <option value="palette1">Palette 1</option>
-            <option value="palette2">Palette 2</option>
-            <option value="palette3">Palette 3</option>
-        </select>
-        -->
-    </div>
+        <ColorPaletteSelector {palettes} {selectedPalette} onSelect={handlePaletteSelect} />
+      </div>
 
     <div class="input-group">
         <SecondaryButton on:click={toggleSettingsMenu}>Erweiterte Einstellungen</SecondaryButton>
