@@ -21,12 +21,18 @@
     let styles: Style[] = [];
     let articleText = "";
     let styleSelection = writable<Style | undefined>(undefined);
+    let stylePrompt = "";
     let colorPalette = "palette1";
     let specificRequest = "";
     let settings = new AdditionalSettings();
     let imageData = "";
 
-    $: console.log("Selected style: ", $styleSelection);
+    $: styleSelection.subscribe(value => {
+        if (value) {
+            stylePrompt = value.prompt;
+            console.log("Style changed to: ", stylePrompt);
+        }
+    });
 
     // boolean to show/hide elements
     let loading = false;
@@ -116,7 +122,7 @@
         promptText += articlePrompt;
         // add style to prompt
         if (styleSelection) {
-            promptText += ", " + styleSelection.prompt;
+            promptText += ", " + stylePrompt;
         }
 
         // calculate aspect ratio
@@ -135,7 +141,7 @@
             color_palette: getSelectedPaletteColors()
         };
 
-        imageData = `Generated image with text: ${articleText}, style: ${styleSelection?.prompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
+        imageData = `Generated image with text: ${articleText}, style: ${stylePrompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
         formData = prompt;
 
         // now GeneratedImages.svelte will handle image retrieval
@@ -190,7 +196,7 @@
             <label for="styleSelect">Stil auswählen</label>
             <Tooltip tooltipText="Hier kannst du den Stil auswählen, in dem die Bilder generiert werden."></Tooltip>
         </div>
-        <SelectStyle {styles} bind:currentStyle={$styleSelection}/>
+        <SelectStyle {styles} bind:currentStyle={styleSelection}/>
     </div>
 
     <div class="input-group space-y-2">

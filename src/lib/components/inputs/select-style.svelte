@@ -1,3 +1,4 @@
+<!-- SelectStyle.svelte -->
 <script lang="ts">
     import type { Style } from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
@@ -13,9 +14,12 @@
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
-        let style = styles?.find(s => s.name === styleId);
+        const style = styles?.find(s => s.name === styleId);
         console.log(style);
-        currentStyle.set(style);
+        if (style) {
+            currentStyle.set(style);
+            console.log("Style changed to: ", style);
+        }
     }
 
     selectedStyleId.subscribe(value => {
@@ -40,7 +44,7 @@
 </script>
 
 <div class="container">
-    <div class="grid gap-2 w-full md:grid-cols-4 styling">
+    <div class="grid gap-6 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
                 <div
