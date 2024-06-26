@@ -13,17 +13,20 @@
     import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
     import {onMount} from "svelte";
+    import {writable} from "svelte/store";
 
 
     let formData: Prompt | null = null;
 
     let styles: Style[] = [];
     let articleText = "";
-    let styleSelection: Style | undefined = undefined;
+    let styleSelection = writable<Style | undefined>(undefined);
     let colorPalette = "palette1";
     let specificRequest = "";
     let settings = new AdditionalSettings();
     let imageData = "";
+
+    $: console.log("Selected style: ", $styleSelection);
 
     // boolean to show/hide elements
     let loading = false;
@@ -187,7 +190,7 @@
             <label for="styleSelect">Stil auswählen</label>
             <Tooltip tooltipText="Hier kannst du den Stil auswählen, in dem die Bilder generiert werden."></Tooltip>
         </div>
-        <SelectStyle {styles} currentStyle={styleSelection}></SelectStyle>
+        <SelectStyle {styles} bind:currentStyle={$styleSelection}/>
     </div>
 
     <div class="input-group space-y-2">

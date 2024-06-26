@@ -2,19 +2,20 @@
     import type { Style } from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
-    import { writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import { onMount } from "svelte";
 
     export let styles: Style[] | undefined;
-    export let currentStyle: Style | undefined;
+    export let currentStyle: Writable<Style | undefined>;
 
     let selectedStyleId = writable<string | undefined>(undefined);
     let showPopup = false;
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
-        currentStyle = styles?.find(s => s.name === styleId);
-        console.log(currentStyle);
+        let style = styles?.find(s => s.name === styleId);
+        console.log(style);
+        currentStyle.set(style);
     }
 
     selectedStyleId.subscribe(value => {
@@ -39,7 +40,7 @@
 </script>
 
 <div class="container">
-    <div class="grid gap-6 w-full md:grid-cols-4 styling">
+    <div class="grid gap-2 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
                 <div
