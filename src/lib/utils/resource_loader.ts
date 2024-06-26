@@ -8,6 +8,10 @@ export class ResourceLoader {
     static async loadStyles() {
         return loadStyles();
     }
+
+    static async loadPalettes() {
+        return loadPalettes();
+    }
 }
 
 // mocked data
@@ -22,6 +26,20 @@ async function loadStyles(): Promise<Style[]> {
         return jsonData;
     } catch (error) {
         console.error('Error loading styles:', error);
+        throw error;
+    }
+}
+
+async function loadPalettes(): Promise<{name: string; colors: string[]}[]> {
+    try {
+        const response = await fetch("/values/palettes.json");
+        if (!response.ok) {
+            throw new Error("Failed to load palettes");
+        }
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.error('Error loading palettes:', error);
         throw error;
     }
 }

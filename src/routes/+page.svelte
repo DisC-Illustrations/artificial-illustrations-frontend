@@ -29,19 +29,9 @@
     let loading = false;
 
     //color palette
-    let palettes = [
-        {name: 'palette1', colors: ['#FFFF00', '#FFA500', '#008000']},
-        {name: 'palette2', colors: ['#87CEEB', '#FFFFFF', '#4682B4']},
-        {name: 'palette3', colors: ['#98FB98', '#2E8B57', '#8B4513']},
-        {name: 'palette4', colors: ['#FFD700', '#FF8C00', '#FF6347']},
-        {name: 'palette5', colors: ['#FFE4B5', '#D2B48C', '#8B4513']},
-        {name: 'palette6', colors: ['#DDA0DD', '#9370DB', '#BA55D3']},
-        {name: 'palette7', colors: ['#FFFFE0', '#FFD700', '#FFA07A']},
-        {name: 'palette8', colors: ['#2F4F4F', '#708090', '#778899']},
-        {name: 'palette9', colors: ['#00008B', '#8A2BE2', '#5F9EA0']}
-    ];
-
+    let palettes = [];
     let selectedPalette = 'palette1';
+
 
     function handlePaletteSelect(palette: string) {
         selectedPalette = palette;
@@ -142,6 +132,8 @@
     onMount(async () => {
         const response = ResourceLoader.loadStyles();
         styles = await response;
+        const palettesResponse = ResourceLoader.loadPalettes();
+        palettes = await palettesResponse; 
     });
 </script>
 
