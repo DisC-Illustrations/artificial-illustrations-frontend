@@ -1,12 +1,9 @@
 <script lang="ts">
     import "./home.css";
-
-    import type {PageServerData} from "./$types";
-    import {AdditionalSettings, type Style, type Prompt} from "$lib/types";
+    import {AdditionalSettings, type Prompt, type Style} from "$lib/types";
     import mammoth from "mammoth";
     import LoadingCircleGradient from "\$lib/components/loading/loading-circle-gradient.svelte";
     import SelectStyle from "$lib/components/inputs/select-style.svelte";
-    import SelectColor from "$lib/components/inputs/select-color.svelte";
     import Tooltip from "$lib/components/inputs/tooltip.svelte";
     import Textarea from "$lib/components/inputs/text-area.svelte";
     import SettingsMenu from "$lib/components/menus/settings-menu.svelte";
@@ -30,7 +27,6 @@
 
     // boolean to show/hide elements
     let loading = false;
-    let showSettingsMenu = false;
 
     //color palette
     let palettes = [
@@ -56,17 +52,13 @@
         return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
     }
 
-    function getSelectedPaletteColors() {
+    function getSelectedPaletteColors(): number[][] {
         let palette = palettes.find(p => p.name === selectedPalette);
         if (palette) {
-            return palette.colors.map(color => ({rgb: hexToRgb(color)}));
+            return palette.colors.map(color => ({rgb: hexToRgb(color)}))
+                .map(color => [color.rgb[0], color.rgb[1], color.rgb[2]]);
         }
         return [];
-    }
-
-
-    function toggleSettingsMenu() {
-        showSettingsMenu = !showSettingsMenu;
     }
 
     function handleFileUpload(event: any) {
@@ -207,15 +199,7 @@
         <ColorPaletteSelector {palettes} {selectedPalette} onSelect={handlePaletteSelect}/>
     </div>
 
-    <div class="input-group">
-        <SecondaryButton on:click={toggleSettingsMenu}>Erweiterte Einstellungen</SecondaryButton>
-    </div>
-
-    {#if showSettingsMenu}
-        <button class="menu-overlay" on:click={toggleSettingsMenu}>
-            <SettingsMenu close={toggleSettingsMenu} settings={settings}/>
-        </button>
-    {/if}
+    <SettingsMenu settings={settings}/>
 
     <div class="input-group">
         <PrimaryButton on:click={generateImages}>Bilder generieren</PrimaryButton>

@@ -1,8 +1,10 @@
 <script lang="ts">
-    import type { AdditionalSettings } from "$lib/types";
-    import { writable } from "svelte/store";
+    import type {AdditionalSettings} from "$lib/types";
+    import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
+    import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
+    import {writable} from "svelte/store";
 
-    export let close: () => void;
+    let showPopup = false;
     export let settings: AdditionalSettings;
 
     let detailInput: HTMLInputElement;
@@ -12,87 +14,102 @@
 
     function handleVariationChange(value: number) {
         selectedVariations.set(value);
+        console.log('Variation:', value);
     }
 
     function handleFormatChange(value: string) {
         selectedFormat.set(value);
+        console.log('Format:', value);
     }
 
     function saveSelection() {
         settings.variations = $selectedVariations;
         settings.resolution = $selectedFormat;
-
         let detail = parseInt(detailInput.value);
         settings.detail = detail === 3 ? 4 : detail;
-
         console.log('Variations:', settings.variations);
         console.log('Resolution:', settings.resolution);
         console.log('Detail:', settings.detail);
-        close();
+        closePopup();
+    }
+
+    function openPopup() {
+        showPopup = true;
+    }
+
+    function closePopup() {
+        showPopup = false;
     }
 </script>
 
-<div class="menu" on:click|stopPropagation role="menu">
-    <div class="menu-header">
-        <h2>Menü</h2>
-        <button class="close-btn" on:click={close}>×</button>
-    </div>
-    <p>Wie viele Variationen sollen generiert werden?</p>
-    <div class="option-group">
-        {#each [1, 2, 3, 4] as variation}
-            <div
-                    class="option"
-                    class:selected={$selectedVariations === variation}
-                    on:click={() => handleVariationChange(variation)}
-            >
-                {variation}
+<SecondaryButton on:click={openPopup}>Weitere Einstellungen</SecondaryButton>
+
+{#if showPopup}
+    <div class="settings-menu-overlay">
+        <div class="popup-content">
+            <button on:click={closePopup} class="close-button">✕</button>
+            <div class="option-group">
+                {#each [1, 2, 3, 4] as variation}
+                    <div
+                            class="option"
+                            class:selected={$selectedVariations === variation}
+                            on:click={() => handleVariationChange(variation)}
+                    >
+                        {variation}
+                    </div>
+                {/each}
             </div>
-        {/each}
-    </div>
-
-    <p>Format auswählen</p>
-    <div class="option-group">
-        {#each [
-            { value: "1024x1024", label: "Quadrat" },
-            { value: "576x1024", label: "Portrait" },
-            { value: "1024x576", label: "Landschaft" }
-        ] as format}
-            <div
-                    class="option"
-                    class:selected={$selectedFormat === format.value}
-                    on:click={() => handleFormatChange(format.value)}
-            >
-                {format.label}
+            <div class="option-group">
+                {#each [
+                    {value: "1024x1024", label: "Quadrat"},
+                    {value: "576x1024", label: "Portrait"},
+                    {value: "1024x576", label: "Landschaft"}
+                ] as format}
+                    <div
+                            class="option"
+                            class:selected={$selectedFormat === format.value}
+                            on:click={() => handleFormatChange(format.value)}
+                    >
+                        {format.label}
+                    </div>
+                {/each}
             </div>
-        {/each}
+            <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
+            <PrimaryButton on:click={saveSelection}>Speichern</PrimaryButton>
+        </div>
     </div>
-
-    <p>Wie detailliert soll das Bild werden?</p>
-    <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
-
-    <button on:click={saveSelection}>Auswahl speichern</button>
-</div>
+{/if}
 
 <style>
-    .menu {
-        background: theme('colors.bgLight');
+    .settings-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background-color: theme('colors.bgLight');
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
         min-width: 300px;
     }
 
-    .menu-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .close-btn {
+    .close-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
         background: none;
         border: none;
-        font-size: 1.5em;
+        font-size: 1.5rem;
         cursor: pointer;
+        color: theme('colors.text');
     }
 
     .option-group {
@@ -110,7 +127,7 @@
     }
 
     .option.selected {
-        background-color: theme('colors.lightBlue');
+        background-color: theme('colors.darkBlue');
         color: white;
         border-color: theme('colors.lightBlue');
     }
