@@ -1,20 +1,25 @@
+<!-- SelectStyle.svelte -->
 <script lang="ts">
     import type { Style } from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
-    import { writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import { onMount } from "svelte";
 
     export let styles: Style[] | undefined;
-    export let currentStyle: Style | undefined;
+    export let currentStyle: Writable<Style | undefined>;
 
     let selectedStyleId = writable<string | undefined>(undefined);
     let showPopup = false;
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
-        currentStyle = styles?.find(s => s.name === styleId);
-        console.log(currentStyle);
+        const style = styles?.find(s => s.name === styleId);
+        console.log(style);
+        if (style) {
+            currentStyle.set(style);
+            console.log("Style changed to: ", style);
+        }
     }
 
     selectedStyleId.subscribe(value => {

@@ -13,17 +13,38 @@
     import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
     import {onMount} from "svelte";
+    import {writable} from "svelte/store";
 
 
     let formData: Prompt | null = null;
 
     let styles: Style[] = [];
+    let styleSelection = writable<Style | undefined>(undefined);
+    let stylePrompt = "";
+
     let articleText = "";
-    let styleSelection: Style | undefined = undefined;
     let colorPalette = "palette1";
     let specificRequest = "";
-    let settings = new AdditionalSettings();
+
+    let settings = writable<AdditionalSettings>(new AdditionalSettings());
+    let variationSetting: number = 1;
+    let resolutionSetting: string = "1024x1024";
+    let detailSetting: number = 2;
     let imageData = "";
+
+    $: styleSelection.subscribe(value => {
+        if (value) {
+            stylePrompt = value.prompt;
+            console.log("Style changed to: ", stylePrompt);
+        }
+    });
+
+    $: settings.subscribe(value => {
+        variationSetting = value.variations;
+        resolutionSetting = value.resolution;
+        detailSetting = value.detail;
+        console.log("Settings saved in variables: " + variationSetting + " " + resolutionSetting + " " + detailSetting);
+    });
 
     // boolean to show/hide elements
     let loading = false;
@@ -103,26 +124,26 @@
         promptText += articlePrompt;
         // add style to prompt
         if (styleSelection) {
-            promptText += ", " + styleSelection.prompt;
+            promptText += ", " + stylePrompt;
         }
 
         // calculate aspect ratio
-        let aspectResolution = settings.resolution.split("x");
+        let aspectResolution = resolutionSetting.split("x");
         let aspectRatio = (parseInt(aspectResolution[0]) as number) / (parseInt(aspectResolution[1]) as number);
 
         console.log("Generating image with prompt: " + promptText);
 
         let prompt: Prompt = {
             prompt: promptText,
-            num_images: settings.variations,
+            num_images: variationSetting,
             image_size: 1024,
             aspect_ratio: aspectRatio,
             steps: 25,
-            upscale: settings.detail,
+            upscale: detailSetting,
             color_palette: getSelectedPaletteColors()
         };
 
-        imageData = `Generated image with text: ${articleText}, style: ${styleSelection?.prompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
+        imageData = `Generated image with text: ${articleText}, style: ${stylePrompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
         formData = prompt;
 
         // now GeneratedImages.svelte will handle image retrieval
@@ -179,7 +200,7 @@
             <label for="styleSelect">Stil auswählen</label>
             <Tooltip tooltipText="Hier kannst du den Stil auswählen, in dem die Bilder generiert werden."></Tooltip>
         </div>
-        <SelectStyle {styles} currentStyle={styleSelection}></SelectStyle>
+        <SelectStyle {styles} bind:currentStyle={styleSelection}/>
     </div>
 
     <div class="input-group space-y-2">
