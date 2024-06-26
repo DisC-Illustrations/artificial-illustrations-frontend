@@ -2,7 +2,7 @@
     import "./home.css";
 
     import type {PageServerData} from "./$types";
-    import {AdditionalSettings, type Prompt} from "$lib/types";
+    import {AdditionalSettings, type Style, type Prompt} from "$lib/types";
     import mammoth from "mammoth";
     import LoadingCircleGradient from "\$lib/components/loading/loading-circle-gradient.svelte";
     import SelectStyle from "$lib/components/inputs/select-style.svelte";
@@ -15,13 +15,14 @@
     import {ResourceLoader} from "$lib/utils/resource_loader";
     import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
+    import {onMount} from "svelte";
 
 
     let formData: Prompt | null = null;
 
-    let styles = ResourceLoader.loadStyles();
+    let styles: Style[] = [];
     let articleText = "";
-    let selectedStyle = "style1";
+    let styleSelection: Style | undefined = undefined;
     let colorPalette = "palette1";
     let specificRequest = "";
     let settings = new AdditionalSettings();
@@ -118,10 +119,16 @@
         let promptText = specificRequest.length > 0 ? specificRequest + ", " : "";
         // promptText = articlePrompt + ", " + selectedStyle;
         promptText += articlePrompt;
+        // add style to prompt
+        if (styleSelection) {
+            promptText += ", " + styleSelection.prompt;
+        }
 
         // calculate aspect ratio
         let aspectResolution = settings.resolution.split("x");
         let aspectRatio = (parseInt(aspectResolution[0]) as number) / (parseInt(aspectResolution[1]) as number);
+
+        console.log("Generating image with prompt: " + promptText);
 
         let prompt: Prompt = {
             prompt: promptText,
@@ -133,7 +140,7 @@
             color_palette: getSelectedPaletteColors()
         };
 
-        imageData = `Generated image with text: ${articleText}, style: ${selectedStyle}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
+        imageData = `Generated image with text: ${articleText}, style: ${styleSelection?.prompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
         formData = prompt;
 
         // now GeneratedImages.svelte will handle image retrieval
@@ -146,10 +153,10 @@
         <!-- show images here if available -->
         {#if loading}
             <div class="image-wrapper">
-                <LoadingCircleGradient />
+                <LoadingCircleGradient/>
             </div>
         {:else}
-            <GeneratedImages initialPrompt={formData} />
+            <GeneratedImages initialPrompt={formData}/>
         {/if}
     </div>
 
@@ -183,7 +190,7 @@
             <label for="styleSelect">Stil auswählen</label>
             <Tooltip tooltipText="Hier kannst du den Stil auswählen, in dem die Bilder generiert werden."></Tooltip>
         </div>
-        <SelectStyle {styles}></SelectStyle>
+        <SelectStyle {styles} currentStyle={styleSelection}></SelectStyle>
     </div>
 
     <div class="input-group space-y-2">

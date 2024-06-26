@@ -5,30 +5,25 @@ export class ResourceLoader {
         return fetchLlmResponse(articleText);
     }
 
-    static loadStyles() {
+    static async loadStyles() {
         return loadStyles();
     }
 }
 
 // mocked data
-function loadStyles(): Style[] {
-    return [
-        {
-            name: "1",
-            src: "https://thumbs.dreamstime.com/b/dwarf-gray-hamster-sits-his-house-sawdust-pet-care-concepts-237425150.jpg",
-            prompt: "1",
-        },
-        {
-            name: "2",
-            src: "https://thumbs.dreamstime.com/b/dwarf-gray-hamster-sits-his-house-sawdust-pet-care-concepts-237425150.jpg",
-            prompt: "1",
-        },
-        {
-            name: "3",
-            src: "https://thumbs.dreamstime.com/b/dwarf-gray-hamster-sits-his-house-sawdust-pet-care-concepts-237425150.jpg",
-            prompt: "1",
-        },
-    ] as unknown as Style[];
+async function loadStyles(): Promise<Style[]> {
+    // read from static directory
+    try {
+        const response = await fetch("/values/styles.json");
+        if (!response.ok) {
+            throw new Error("Failed to load styles");
+        }
+        const jsonData: Style[] = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.error('Error loading styles:', error);
+        throw error;
+    }
 }
 
 const fetchLlmResponse = async (articleText: string): Promise<string> => {
