@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Radio } from "flowbite-svelte";
     import type { Style } from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
@@ -9,23 +8,22 @@
     export let styles: Style[] | undefined;
     export let currentStyle: Style | undefined;
 
-    const selectedStyle = writable<Style | undefined>(undefined);
+    let selectedStyleId = writable<string | undefined>(undefined);
     let showPopup = false;
 
-    function handleStyleChange(event: Event) {
-        const target = event.target as HTMLInputElement;
-        const style = styles?.find((s) => s.name === target.value);
-        selectedStyle.set(style);
+    function handleStyleChange(styleId: string) {
+        selectedStyleId.set(styleId);
+        currentStyle = styles?.find(s => s.name === styleId);
+        console.log(currentStyle);
     }
 
-    selectedStyle.subscribe((value) => {
-        currentStyle = value;
+    selectedStyleId.subscribe(value => {
+        console.log(value);
     });
 
     onMount(() => {
-        let firstStyle = styles?.[0];
-        if (firstStyle) {
-            selectedStyle.set(firstStyle);
+        if (styles && styles.length > 0) {
+            handleStyleChange(styles[0].name);
         } else {
             console.error("No styles found");
         }
@@ -43,30 +41,33 @@
 <div class="container">
     <div class="grid gap-6 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
-            {#each styles.slice(0, 3) as s}
-                <Radio name="style" value={s.name} on:change={handleStyleChange} custom>
-                    <div class="aspect-square rounded-2xl border border-border cursor-pointer peer-checked:border-lightBlue peer-checked:border-[5px] duration-200 w-20">
-                        <img src={s.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
-                    </div>
-                </Radio>
+            {#each styles.slice(0, 3) as style}
+                <div
+                        class="aspect-square rounded-2xl border cursor-pointer duration-200 w-20"
+                        class:selected={$selectedStyleId === style.name}
+                        on:click={() => handleStyleChange(style.name)}
+                >
+                    <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                </div>
             {/each}
         {/if}
         <SecondaryButton on:click={openPopup}>Mehr</SecondaryButton>
     </div>
 
-
     {#if showPopup}
         <div class="settings-menu-overlay">
             <div class="popup-content">
                 <button on:click={closePopup} class="close-button">✕</button>
-                <div class="grid grid-cols-4 gap-4">
+                <div class="grid grid-cols-4 gap-4 m-6">
                     {#if styles}
-                        {#each styles as s}
-                            <Radio name="style" value={s.name} on:change={handleStyleChange} custom>
-                                <div class="aspect-square rounded-2xl border border-border cursor-pointer peer-checked:border-lightBlue peer-checked:border-[5px] duration-200 w-24">
-                                    <img src={s.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
-                                </div>
-                            </Radio>
+                        {#each styles as style}
+                            <div
+                                    class="aspect-square rounded-2xl border cursor-pointer duration-200 w-24"
+                                    class:selected={$selectedStyleId === style.name}
+                                    on:click={() => handleStyleChange(style.name)}
+                            >
+                                <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                            </div>
                         {/each}
                     {/if}
                 </div>
@@ -77,10 +78,6 @@
 </div>
 
 <style>
-    :global(input[type="radio"]) {
-        display: none;
-    }
-
     .container {
         display: flex;
         flex-direction: column;
@@ -89,21 +86,6 @@
         background-color: theme('colors.bg');
         color: theme('colors.text');
         font-family: 'Poppins', sans-serif;
-    }
-
-    .mehr-button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        background-color: theme('colors.lightBlue');
-        color: white;
-        border: none;
-        border-radius: 0.25rem;
-        cursor: pointer;
-        align-self: flex-start;
-    }
-
-    .mehr-button:hover {
-        background-color: theme('colors.darkBlue');
     }
 
     .settings-menu-overlay {
@@ -139,17 +121,8 @@
         color: theme('colors.text');
     }
 
-    .save-button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        background-color: theme('colors.lightBlue');
-        color: white;
-        border: none;
-        border-radius: 0.25rem;
-        cursor: pointer;
-    }
-
-    .save-button:hover {
-        background-color: theme('colors.darkBlue');
+    .selected {
+        border-color: theme('colors.lightBlue');
+        border-width: 5px;
     }
 </style>
