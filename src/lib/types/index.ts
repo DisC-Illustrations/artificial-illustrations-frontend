@@ -25,7 +25,7 @@ export interface Prompt {
 
 export interface Style {
     name: string;
-    src: string;
+    preview_src: string;
     prompt: string;
 }
 

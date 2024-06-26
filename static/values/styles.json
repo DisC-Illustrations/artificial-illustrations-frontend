@@ -1,0 +1,57 @@
+[
+  {
+    "name": "etel-adnan",
+    "preview_src": "/images/styles-previews/etel-adnan.png",
+    "prompt": "by Etel Adnan"
+  },
+  {
+    "name": "bw-lineart",
+    "preview_src": "/images/styles-previews/bw-lineart.png",
+    "prompt": "drawn with a single thin black line on a white background, (shading)0"
+  },
+  {
+    "name": "ink-bg-white",
+    "preview_src": "/images/styles-previews/ink-bg-white.png",
+    "prompt": " ink drawing, one line, detailed, (white background)2"
+  },
+  {
+    "name": "john-berkey-brush",
+    "preview_src": "/images/styles-previews/john-berkey-brush.png",
+    "prompt": "by John Berkey, thick brush strokes, science fiction style, bold"
+  },
+  {
+    "name": "abstract-fluid",
+    "preview_src": "/images/styles-previews/abstract-fluid.png",
+    "prompt": "4d abstract fluid artwork rendered in unreal engine 5, super highly detailed ribbons of color floating and contorting, amazing composition, non Newtonian fluid dynamics, dynamic shape of subject, explosive colors, sharp details"
+  },
+  {
+    "name": "john-camberlain-sculpture",
+    "preview_src": "/images/styles-previews/john-camberlain-sculpture.png",
+    "prompt": "by John Chamberlain"
+  },
+  {
+    "name": "technical-illustration",
+    "preview_src": "/images/styles-previews/technical-illustration.png",
+    "prompt": "technical illustration, lots of lines, network,"
+  },
+  {
+    "name": "abstract-gradient",
+    "preview_src": "/images/styles-previews/abstract-gradient.png",
+    "prompt": "abstract gradient, by Gabriel Dawe"
+  },
+  {
+    "name": "august-macke-abstract",
+    "preview_src": "/images/styles-previews/august-macke-abstract.png",
+    "prompt": "by August Macke"
+  },
+  {
+    "name": "pencil-sketch",
+    "preview_src": "/images/styles-previews/pencil-sketch.png",
+    "prompt": "(pencil sketch)2, (white background)2, rough lines,"
+  },
+  {
+    "name": "vivid-watercolor",
+    "preview_src": "/images/styles-previews/vivid-watercolor.png",
+    "prompt": "vivid watercolor, by Paul Klee"
+  }
+]
