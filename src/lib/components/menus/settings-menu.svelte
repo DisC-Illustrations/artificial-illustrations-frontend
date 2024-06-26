@@ -1,27 +1,29 @@
 <script lang="ts">
-    import type {AdditionalSettings} from "$lib/types";
+    import type { AdditionalSettings } from "$lib/types";
+    import { writable } from "svelte/store";
 
     export let close: () => void;
-
     export let settings: AdditionalSettings;
 
-    let variationInputs: HTMLDivElement;
-    let resolutionInputs: HTMLDivElement;
     let detailInput: HTMLInputElement;
 
-    function saveSelection() {
-        let variationsSelected = variationInputs.querySelector('input[name="variations"]:checked')!! as HTMLInputElement;
-        settings.variations = parseInt(variationsSelected.value);
+    const selectedVariations = writable(1);
+    const selectedFormat = writable("1024x1024");
 
-        let resolutionSelected = resolutionInputs.querySelector('input[name="format"]:checked')!! as HTMLInputElement;
-        settings.resolution = resolutionSelected.value;
+    function handleVariationChange(value: number) {
+        selectedVariations.set(value);
+    }
+
+    function handleFormatChange(value: string) {
+        selectedFormat.set(value);
+    }
+
+    function saveSelection() {
+        settings.variations = $selectedVariations;
+        settings.resolution = $selectedFormat;
 
         let detail = parseInt(detailInput.value);
-        if (detail == 3) {
-            settings.detail = 4;
-        } else {
-            settings.detail = detail;
-        }
+        settings.detail = detail === 3 ? 4 : detail;
 
         console.log('Variations:', settings.variations);
         console.log('Resolution:', settings.resolution);
@@ -29,6 +31,47 @@
         close();
     }
 </script>
+
+<div class="menu" on:click|stopPropagation role="menu">
+    <div class="menu-header">
+        <h2>Menü</h2>
+        <button class="close-btn" on:click={close}>×</button>
+    </div>
+    <p>Wie viele Variationen sollen generiert werden?</p>
+    <div class="option-group">
+        {#each [1, 2, 3, 4] as variation}
+            <div
+                    class="option"
+                    class:selected={$selectedVariations === variation}
+                    on:click={() => handleVariationChange(variation)}
+            >
+                {variation}
+            </div>
+        {/each}
+    </div>
+
+    <p>Format auswählen</p>
+    <div class="option-group">
+        {#each [
+            { value: "1024x1024", label: "Quadrat" },
+            { value: "576x1024", label: "Portrait" },
+            { value: "1024x576", label: "Landschaft" }
+        ] as format}
+            <div
+                    class="option"
+                    class:selected={$selectedFormat === format.value}
+                    on:click={() => handleFormatChange(format.value)}
+            >
+                {format.label}
+            </div>
+        {/each}
+    </div>
+
+    <p>Wie detailliert soll das Bild werden?</p>
+    <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
+
+    <button on:click={saveSelection}>Auswahl speichern</button>
+</div>
 
 <style>
     .menu {
@@ -51,37 +94,24 @@
         font-size: 1.5em;
         cursor: pointer;
     }
+
+    .option-group {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .option {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .option.selected {
+        background-color: theme('colors.lightBlue');
+        color: white;
+        border-color: theme('colors.lightBlue');
+    }
 </style>
-
-<div class="menu" on:click|stopPropagation role="menu">
-    <div class="menu-header">
-        <h2>Menü</h2>
-        <button class="close-btn" on:click={close}>×</button>
-    </div>
-    <p>Wie viele Variationen sollen generiert werden?</p>
-    <div bind:this={variationInputs}>
-        <input type="radio" id="var1" name="variations" value="1" checked>
-        <label for="var1">1</label>
-        <input type="radio" id="var2" name="variations" value="2">
-        <label for="var2">2</label>
-        <input type="radio" id="var3" name="variations" value="3">
-        <label for="var3">3</label>
-        <input type="radio" id="var4" name="variations" value="4">
-        <label for="var4">4</label>
-    </div>
-
-    <p>Format auswählen</p>
-    <div bind:this={resolutionInputs}>
-        <input type="radio" id="format1" name="format" value="1024x1024" checked>
-        <label for="format1">Quadrat</label>
-        <input type="radio" id="format2" name="format" value="576x1024">
-        <label for="format2">Portrait</label>
-        <input type="radio" id="format3" name="format" value="1024x576">
-        <label for="format3">Landschaft</label>
-    </div>
-
-    <p>Wie detailliert soll das Bild werden?</p>
-    <input type="range" min="1" max="3" value="2" bind:this={detailInput}>
-
-    <button on:click={saveSelection}>Auswahl speichern</button>
-</div>
