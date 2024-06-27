@@ -1,4 +1,4 @@
-import type {Prompt, GeneratedImage} from '$lib/types';
+import type {GeneratedImage, Prompt} from '$lib/types';
 
 export async function generate(prompt: Prompt): Promise<GeneratedImage[]> {
     const response = await fetch(buildBaseURL() + "/generate", {
@@ -17,7 +17,11 @@ export async function generate(prompt: Prompt): Promise<GeneratedImage[]> {
 }
 
 export async function getImage(id: number): Promise<GeneratedImage> {
-    const response = await fetch(buildBaseURL() + `/image/${id}`);
+    console.log("Fetching image with id", id);
+    let imageId: string = id.toString()
+    let url: string = buildBaseURL() + "/images/" + imageId;
+    console.log("Fetching image from", url);
+    const response = await fetch(url);
 
     if (!response.ok) {
         console.error(response);
@@ -27,7 +31,18 @@ export async function getImage(id: number): Promise<GeneratedImage> {
     return await response.json();
 }
 
-function buildBaseURL() {
+export async function getImageIds(): Promise<number[]> {
+    const response = await fetch(buildBaseURL() + "/images");
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+
+    let images = await response.json();
+    return images.map((image: { id: number }) => image.id);
+}
+
+function buildBaseURL(): string {
     try {
         let port = import.meta.env.VITE_AI_BACKEND_PORT || 5000;
         return `http://127.0.0.1:${port}`;

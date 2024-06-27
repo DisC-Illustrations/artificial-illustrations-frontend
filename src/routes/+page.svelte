@@ -8,10 +8,10 @@
     import Textarea from "$lib/components/inputs/text-area.svelte";
     import SettingsMenu from "$lib/components/menus/settings-menu.svelte";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
-    import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import {ResourceLoader} from "$lib/utils/resource_loader";
     import GeneratedImages from "$lib/components/image/generated-images.svelte";
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
+    import ImageHistory from "$lib/components/image/image-history.svelte";
     import {onMount} from "svelte";
     import {writable} from "svelte/store";
 
@@ -158,7 +158,8 @@
     });
 </script>
 
-<div class="container bg-bg text-text font-sans p-8 space-y-4">
+<!-- margin (ml-28) for history bar, needs refactoring -->
+<div class="container bg-bg text-text font-sans p-8 space-y-4 ml-28">
     <div class="image-container">
         <!-- show images here if available -->
         {#if loading}
@@ -217,4 +218,6 @@
     <div class="input-group">
         <PrimaryButton on:click={generateImages}>Bilder generieren</PrimaryButton>
     </div>
+
+    <ImageHistory/>
 </div>

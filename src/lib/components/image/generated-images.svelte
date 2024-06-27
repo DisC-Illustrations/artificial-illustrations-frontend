@@ -2,16 +2,17 @@
     import { generate, getImage } from '$lib/api';
     import LoadingWave from '../loading/loading-wave.svelte';
     import type { Prompt, GeneratedImage } from '$lib/types';
+    import ImagePopup from '$lib/components/image/image-popup.svelte';
 
     export let initialPrompt: Prompt | null = null;
 
     let generatedImages: GeneratedImage[] = [];
     let error: string | null = null;
-    
-    $: loading = false;
+    let loading = false;
+    let selectedImage: GeneratedImage | null = null;
 
     async function handleGenerate(requestPrompt: Prompt | null = initialPrompt) {
-        // todo: refactoring for this to be in a not async function
+        error = null;
         loading = true;
         if (!requestPrompt) {
             return;
@@ -54,6 +55,14 @@
         }
     }
 
+    function openPopup(image: GeneratedImage) {
+        selectedImage = image;
+    }
+
+    function closePopup() {
+        selectedImage = null;
+    }
+
     $: {
         if (initialPrompt) {
             handleGenerate(initialPrompt);
@@ -76,13 +85,17 @@
 {:else}
     <div class="image-grid">
         {#each generatedImages as image (image.id)}
-            <div class="image-container">
+            <div class="image-container" on:click={() => openPopup(image)}>
                 <img src="data:image/png;base64,{image.image}" alt="Prompt: {image.prompt}">
                 <p>ID: {image.id}</p>
                 <p>Prompt: {image.prompt}</p>
             </div>
         {/each}
     </div>
+{/if}
+
+{#if selectedImage}
+    <ImagePopup image={selectedImage} on:close={closePopup} />
 {/if}
 
 <style>
@@ -102,6 +115,7 @@
     .image-container {
         border: 1px solid theme('colors.lightBlue');
         padding: 1rem;
+        cursor: pointer;
     }
 
     .image-container img {
