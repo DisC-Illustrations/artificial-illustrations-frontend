@@ -7,12 +7,12 @@
     {
         "name": "etel-adnan",
         "preview_src": "/images/styles-previews/etel-adnan.png",
-        "prompt": "by Etel Adnan"
+        "prompt": "geometric simplicity, colorful shapes, minimalist, abstract, flat areas of color"
     },
     {
         "name": "august-macke",
         "preview_src": "/images/styles-previews/august-macke.png",
-        "prompt": "by August Macke"
+        "prompt": "bold colors, simplified forms, expressive compositions, flat areas of color, saturated colors"
     },
     {
         "name": "fluid",
@@ -22,7 +22,7 @@
     {
         "name": "john-berkey",
         "preview_src": "/images/styles-previews/john-berkey.png",
-        "prompt": "by John Berkey, thick brush strokes, science fiction style, bold"
+        "prompt": "in the style of science fiction art, dynamic compositions, thick brush strokes, bold"
     },
     {
         "name": "technical-illustration",
@@ -32,7 +32,7 @@
     {
         "name": "abstract-gradient",
         "preview_src": "/images/styles-previews/gradient.png",
-        "prompt": "abstract gradient, by Gabriel Dawe"
+        "prompt": "abstract gradient, colorful, geometric patterns, light interplay, multi-colored"
     },
     {
         "name": "pencil-sketch",
@@ -42,6 +42,6 @@
     {
         "name": "watercolor",
         "preview_src": "/images/styles-previews/watercolor.png",
-        "prompt": "vivid watercolor, by Paul Klee"
+        "prompt": "vivid watercolor, playful use of color, whimsical, playful patterns, abstract forms"
     }
 ]
