@@ -74,13 +74,13 @@
     <p>{error}</p>
 {/if}
 
-{#if generatedImages.length === 0}
-    <div class="image-wrapper">
-        <p>Keine Bilder vorhanden</p>
-    </div>
-{:else if loading}
+{#if loading}
     <div class="image-wrapper">
         <LoadingWave />
+    </div>
+{:else if generatedImages.length === 0}
+    <div class="image-wrapper">
+        <p>Keine Bilder vorhanden</p>
     </div>
 {:else}
     <div class="image-grid">

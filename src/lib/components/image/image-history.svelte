@@ -3,11 +3,14 @@
     import { onMount } from 'svelte';
     import { getImageIds, getImage } from '$lib/api';
     import type { GeneratedImage } from '$lib/types';
+    import ImagePopup from '$lib/components/image/image-popup.svelte';
 
     let imageIds: number[] = [];
     let images: GeneratedImage[] = [];
     let loading = true;
     let error: string | null = null;
+
+    let selectedImage: GeneratedImage | null = null;
 
     onMount(async () => {
         try {
@@ -27,11 +30,12 @@
         images = await Promise.all(promises);
     }
 
-    function handleImageClick(image: GeneratedImage) {
-        // Dispatch an event or use a store to communicate with the parent component
-        // For example:
-        // dispatch('selectImage', image);
-        console.log('Selected image:', image);
+    function openPopup(image: GeneratedImage) {
+        selectedImage = image;
+    }
+
+    function closePopup() {
+        selectedImage = null;
     }
 </script>
 
@@ -45,7 +49,7 @@
     {:else}
         <div class="image-list">
             {#each images as image (image.id)}
-                <div class="image-item" on:click={() => handleImageClick(image)}>
+                <div class="image-item" on:click={() => openPopup(image)}>
                     <img src="data:image/png;base64,{image.image}" alt="Generated image {image.id}" />
                     <div class="image-info">
                         <p class="image-id">ID: {image.id}</p>
@@ -56,6 +60,10 @@
         </div>
     {/if}
 </aside>
+
+{#if selectedImage}
+    <ImagePopup image={selectedImage} on:close={closePopup} />
+{/if}
 
 <style>
     .image-history-sidebar {
