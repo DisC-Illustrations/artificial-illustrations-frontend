@@ -10,7 +10,7 @@
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import {ResourceLoader} from "$lib/utils/resource_loader";
-    import GeneratedImages from "$lib/components/image/GeneratedImages.svelte";
+    import GeneratedImages from "$lib/components/image/generated-images.svelte";
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
     import {onMount} from "svelte";
     import {writable} from "svelte/store";
@@ -146,7 +146,7 @@
         imageData = `Generated image with text: ${articleText}, style: ${stylePrompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
         formData = prompt;
 
-        // now GeneratedImages.svelte will handle image retrieval
+        // now generated-images.svelte will handle image retrieval
         loading = false;
     }
 
