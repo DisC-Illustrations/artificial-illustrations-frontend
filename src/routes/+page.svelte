@@ -50,7 +50,7 @@
     let loading = false;
 
     //color palette
-    let palettes = [];
+    let palettes: { name: string, colors: Array<string> }[] = [];
     let selectedPalette = 'palette1';
 
 
