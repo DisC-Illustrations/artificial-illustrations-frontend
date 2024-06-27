@@ -1,145 +1,141 @@
 <script lang="ts">
-  import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
-  import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
-  import { writable } from "svelte/store";
-  import { onMount } from "svelte";
+    import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
+    import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
+    import { writable } from "svelte/store";
+    import { onMount } from "svelte";
+    import TertiaryButton from "../buttons/tertiary-button.svelte";
 
-  export let palettes: Array<{ name: string, colors: Array<string> }> = [];
-  export let selectedPalette: string;
-  export let onSelect: (palette: string) => void;
+    export let palettes: Array<{ name: string; colors: Array<string> }> = [];
+    export let selectedPalette: string;
+    export let onSelect: (palette: string) => void;
 
-  let selectedPaletteId = writable<string | undefined>(undefined);
-  let showPopup = false;
+    let selectedPaletteId = writable<string | undefined>(undefined);
+    let showPopup = false;
 
-  function handleSelect(palette: string) {
-      onSelect(palette);
-      selectedPaletteId.set(palette);
-      selectedPalette = palette;
-  }
+    function handleSelect(palette: string) {
+        onSelect(palette);
+        selectedPaletteId.set(palette);
+        selectedPalette = palette;
+    }
 
-  selectedPaletteId.subscribe(value => {
-      console.log(value);
-  });
+    selectedPaletteId.subscribe((value) => {
+        console.log(value);
+    });
 
-  onMount(() => {
-      if (palettes && palettes.length > 0) {
-          handleSelect(palettes[0].name);
-      } else {
-          console.error("No palettes found");
-      }
-  });
+    onMount(() => {
+        if (palettes && palettes.length > 0) {
+            handleSelect(palettes[0].name);
+        } else {
+            console.error("No palettes found");
+        }
+    });
 
-  function openPopup() {
-      showPopup = true;
-  }
+    function openPopup() {
+        showPopup = true;
+    }
 
-  function closePopup() {
-      showPopup = false;
-  }
+    function closePopup() {
+        showPopup = false;
+    }
 </script>
 
-<div class="container">
-  <div class="grid gap-6 w-full md:grid-cols-4 styling">
-      {#if palettes && palettes.length > 0}
-          {#each palettes.slice(0, 3) as {name, colors}}
-              <div
-                      class="palette {selectedPalette === name ? 'selected' : ''}"
-                      on:click={() => handleSelect(name)}
-              >
-                  {#each colors as color}
-                      <div class="color" style="background-color: {color}"></div>
-                  {/each}
-              </div>
-          {/each}
-      {/if}
-      <SecondaryButton on:click={openPopup}>Mehr</SecondaryButton>
-      <SecondaryButton on:click={() => handleSelect(undefined)}>Keine Farbpalette auswählen</SecondaryButton>
-  </div>
+<div class="">
+    <div class="grid gap-6 w-full md:grid-cols-4 styling">
+        {#if palettes && palettes.length > 0}
+            {#each palettes.slice(0, 3) as { name, colors }}
+                <div
+                    class="palette {selectedPalette === name ? 'selected' : ''}"
+                    on:click={() => handleSelect(name)}
+                >
+                    {#each colors as color}
+                        <div
+                            class="color"
+                            style="background-color: {color}"
+                        ></div>
+                    {/each}
+                </div>
+            {/each}
+        {/if}
+        <TertiaryButton on:click={openPopup}>Mehr</TertiaryButton>
+        <div class="flex items-center gap-4 w-full">
+            oder
+            <button
+                on:click={() => handleSelect(undefined)}
+                class="{selectedPalette === undefined
+                    ? 'bg-lightBlue'
+                    : ''} py-4 px-8 rounded-2xl justify-center whitespace-nowrap items-center font-bold border border-lightBlue text-white transition-all active:scale-95 disabled:active:scale-100 duration-200 disabled:opacity-50"
+                >Zufällige Farben</button
+            >
+        </div>
+    </div>
 
-  {#if showPopup}
-      <div class="settings-menu-overlay">
-          <div class="popup-content">
-              <button on:click={closePopup} class="close-button">✕</button>
-              <div class="grid grid-cols-4 gap-4 m-6">
-                  {#if palettes}
-                      {#each palettes as {name, colors}}
-                          <div
-                                  class="palette {selectedPalette === name ? 'selected' : ''}"
-                                  on:click={() => handleSelect(name)}
-                          >
-                              {#each colors as color}
-                                  <div class="color" style="background-color: {color}"></div>
-                              {/each}
-                          </div>
-                      {/each}
-                  {/if}
-              </div>
-              <PrimaryButton on:click={closePopup}>Auswahl Speichern</PrimaryButton>
-          </div>
-      </div>
-  {/if}
+    {#if showPopup}
+        <div
+            class="fixed top-0 left-0 w-full h-full bg-bg/[.7] flex items-center justify-center"
+        >
+            <div
+                class="bg-bgLight border border-border rounded-2xl relative p-12 flex flex-col"
+            >
+                <button on:click={closePopup} class="close-button">✕</button>
+                <span class="font-bold mb-8">Farbpalette auswählen</span>
+                <div class="grid grid-cols-3 gap-4">
+                    {#if palettes}
+                        {#each palettes as { name, colors }}
+                            <div
+                                class="palette {selectedPalette === name
+                                    ? 'selected'
+                                    : ''}"
+                                on:click={() => handleSelect(name)}
+                            >
+                                {#each colors as color}
+                                    <div
+                                        class="color"
+                                        style="background-color: {color}"
+                                    ></div>
+                                {/each}
+                            </div>
+                        {/each}
+                    {/if}
+                </div>
+                <div class="self-end mt-8">
+                    <PrimaryButton on:click={closePopup}
+                        >Auswahl Speichern</PrimaryButton
+                    >
+                </div>
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style>
-  .container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      padding: 2rem;
-      background-color: theme('colors.bg');
-      color: theme('colors.text');
-      font-family: 'Poppins', sans-serif;
-  }
+    .close-button {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: theme("colors.text");
+    }
 
-  .settings-menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  }
+    .palette {
+        display: flex;
+        cursor: pointer;
+        border: 2px solid white;
+        border-radius: 15px;
+        overflow: hidden;
+        max-height: 45px;
+    }
 
-  .popup-content {
-      background-color: theme('colors.bg');
-      padding: 2rem;
-      border-radius: 0.5rem;
-      max-width: 90%;
-      max-height: 90%;
-      overflow-y: auto;
-      position: relative;
-  }
+    .palette.selected {
+        border-color: #0ebcb5;
+        border-width: 5px;
+    }
 
-  .close-button {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: theme('colors.text');
-  }
-
-  .palette {
-      display: flex;
-      cursor: pointer;
-      border: 2px solid transparent;
-      border-radius: 8px;
-      overflow: hidden;
-  }
-
-  .palette.selected {
-      border-color: #00FFFF; 
-  }
-
-  .color {
-      flex: 1;
-      height: 50px;
-      width: 50px;
-
-  }
+    .color {
+        flex: 1;
+        height: 45px;
+        width: 40px;
+    }
 </style>

@@ -1,10 +1,8 @@
 <script lang="ts">
     export let name: string;
-    export let label: string = "";
     export let value: string | undefined | null;
     export let error: string[] | undefined = undefined;
     export let placeholder: string = "";
-    export let underlineStyle = false;
     export let required = false;
     export let style = "";
     export let disabled = false;
@@ -17,21 +15,6 @@
 </script>
 
 <div class={style}>
-    {#if label.length > 0}
-        <label
-            for={name}
-            class="block {underlineStyle
-                ? 'text-[15px] '
-                : 'text-sm ml-[5px]'} leading-none {underlineStyle
-                ? 'mb-0'
-                : 'mb-2'} dark:text-white select-none"
-        >
-            {label}
-            {#if required}
-                <span class="text-primary">*</span>
-            {/if}</label
-        >
-    {/if}
     <div class="relative">
         <input
             on:click

@@ -5,6 +5,7 @@
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import { writable, type Writable } from "svelte/store";
     import { onMount } from "svelte";
+    import TertiaryButton from "../buttons/tertiary-button.svelte";
 
     export let styles: Style[] | undefined;
     export let currentStyle: Writable<Style | undefined>;
@@ -14,7 +15,7 @@
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
-        const style = styles?.find(s => s.name === styleId);
+        const style = styles?.find((s) => s.name === styleId);
         console.log(style);
         if (style) {
             currentStyle.set(style);
@@ -22,7 +23,7 @@
         }
     }
 
-    selectedStyleId.subscribe(value => {
+    selectedStyleId.subscribe((value) => {
         console.log(value);
     });
 
@@ -43,78 +44,63 @@
     }
 </script>
 
-<div class="container">
+<div class="">
     <div class="grid gap-6 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
                 <div
-                        class="aspect-square rounded-2xl border cursor-pointer duration-200 w-20"
-                        class:selected={$selectedStyleId === style.name}
-                        on:click={() => handleStyleChange(style.name)}
+                    class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200"
+                    class:selected={$selectedStyleId === style.name}
+                    on:click={() => handleStyleChange(style.name)}
                 >
-                    <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                    <img
+                        src={style.preview_src}
+                        alt="style"
+                        class="w-full h-full object-cover rounded-[10px]"
+                    />
                 </div>
             {/each}
         {/if}
-        <SecondaryButton on:click={openPopup}>Mehr</SecondaryButton>
+        <TertiaryButton on:click={openPopup}>Mehr</TertiaryButton>
     </div>
 
     {#if showPopup}
-        <div class="settings-menu-overlay">
-            <div class="popup-content">
+        <div
+            class="fixed top-0 left-0 w-full h-full bg-bg/[.7] flex items-center justify-center"
+        >
+            <div
+                class="bg-bgLight border border-border rounded-2xl relative p-12 flex flex-col"
+            >
                 <button on:click={closePopup} class="close-button">✕</button>
-                <div class="grid grid-cols-4 gap-4 m-6">
+                <span class="font-bold mb-8">Stil auswählen</span>
+                <div class="grid grid-cols-3 gap-4">
                     {#if styles}
                         {#each styles as style}
                             <div
-                                    class="aspect-square rounded-2xl border cursor-pointer duration-200 w-24"
-                                    class:selected={$selectedStyleId === style.name}
-                                    on:click={() => handleStyleChange(style.name)}
+                                class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200 w-24"
+                                class:selected={$selectedStyleId === style.name}
+                                on:click={() => handleStyleChange(style.name)}
                             >
-                                <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                                <img
+                                    src={style.preview_src}
+                                    alt="style"
+                                    class="w-full h-full object-cover rounded-[10px]"
+                                />
                             </div>
                         {/each}
                     {/if}
                 </div>
-                <PrimaryButton on:click={closePopup}>Auswahl Speichern</PrimaryButton>
+                <div class="self-end mt-8">
+                    <PrimaryButton on:click={closePopup}
+                        >Auswahl Speichern</PrimaryButton
+                    >
+                </div>
             </div>
         </div>
     {/if}
 </div>
 
 <style>
-    .container {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 2rem;
-        background-color: theme('colors.bg');
-        color: theme('colors.text');
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .settings-menu-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .popup-content {
-        background-color: theme('colors.bg');
-        padding: 2rem;
-        border-radius: 0.5rem;
-        max-width: 90%;
-        max-height: 90%;
-        overflow-y: auto;
-        position: relative;
-    }
-
     .close-button {
         position: absolute;
         top: 1rem;
@@ -123,11 +109,11 @@
         border: none;
         font-size: 1.5rem;
         cursor: pointer;
-        color: theme('colors.text');
+        color: theme("colors.text");
     }
 
     .selected {
-        border-color: theme('colors.lightBlue');
+        border-color: theme("colors.lightBlue");
         border-width: 5px;
     }
 </style>
