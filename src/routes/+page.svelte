@@ -51,7 +51,7 @@
 
     //color palette
     let palettes: { name: string, colors: Array<string> }[] = [];
-    let selectedPalette = 'palette1';
+    let selectedPalette = 'noPalette';
 
 
     function handlePaletteSelect(palette: string) {
