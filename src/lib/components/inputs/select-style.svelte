@@ -55,7 +55,7 @@
     }
 </script>
 
-<div class="container">
+<div class="">
     <div class="grid gap-6 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
