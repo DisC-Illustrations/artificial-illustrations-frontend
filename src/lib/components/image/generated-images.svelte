@@ -123,7 +123,6 @@
     }
 
     .image-container img {
-        width: 100%;
-        height: auto;
+        height: max-content;
     }
 </style>

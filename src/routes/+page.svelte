@@ -13,7 +13,7 @@
     import ColorPaletteSelector from "$lib/components/inputs/select-colorPalette.svelte";
     import ImageHistory from "$lib/components/image/image-history.svelte";
     import { onMount } from "svelte";
-    import { writable } from "svelte/store";
+    import {type Writable, writable} from "svelte/store";
     import TextInput from "$lib/components/inputs/text-input.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
 
@@ -162,7 +162,8 @@
             image_size: 1024,
             aspect_ratio: aspectRatio,
             steps: 30,
-            upscale: detailSetting,
+            // upscale: detailSetting,
+            upscale: 1, // don't upscale for now
             color_palette: getSelectedPaletteColors(),
         };
 
@@ -181,7 +182,12 @@
     });
 </script>
 
-<div class="grid grid-cols-3 gap-12 h-full">
+<div class="flex items-center justify-center h-1/5">
+    <GeneratedImages initialPrompt={formData}
+                     newImageGenerated={newImageGenerated}
+                        styles={styles} />
+</div>
+<div class="grid grid-cols-3 gap-12 h-4/5">
     <div
         class="bg-bgLight rounded-2xl overflow-hidden relative flex items-center justify-center flex-col p-8"
     >
@@ -260,7 +266,9 @@
         </div>
 
         <div class="self-end mt-auto">
-            <ImageHistory {newImageGenerated} {styles} />
+            <div class="my-3">
+                <ImageHistory {newImageGenerated} {styles} />
+            </div>
             {#if loading}
                 <div class="image-wrapper">
                     <LoadingCircleGradient />
