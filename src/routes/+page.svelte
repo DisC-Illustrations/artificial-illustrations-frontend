@@ -18,7 +18,6 @@
 
     const newImageGenerated: Writable<boolean> = writable(false);
 
-
     let formData: Prompt | null = null;
 
     let styles: Style[] = [];
@@ -61,8 +60,7 @@
 
     //color palette
     let palettes: { name: string; colors: Array<string> }[] = [];
-    let selectedPalette = 'noPalette';
-
+    let selectedPalette = "noPalette";
 
     function handlePaletteSelect(palette: string) {
         selectedPalette = palette;
@@ -183,7 +181,24 @@
 </script>
 
 <div class="grid grid-cols-3 gap-12">
-    <div class=""></div>
+    <div
+        class="bg-bgLight rounded-2xl overflow-hidden relative flex items-center justify-center flex-col p-8"
+    >
+        <img
+            src="/images/bg.png"
+            alt="background pattern"
+            class="object-cover absolute"
+        />
+        <span
+            class="font-bold text-[30px] text-transparent bg-gradient-to-r to-darkBlue from-lightBlue bg-clip-text z-20"
+            >Artificial Illustrations</span
+        >
+        <span class="text-center mt-2"
+            >Die Software nutzt künstliche Intelligenz, um aus
+            wissenschaftlichen Artikeln Titelbilder zu generieren und Forschung
+            zu visualisieren.</span
+        >
+    </div>
     <div class="flex flex-col">
         <div class="flex items-center gap-2 mb-2">
             <label for="articleText">Artikel eingeben</label>
@@ -261,9 +276,13 @@
                 <LoadingCircleGradient />
             </div>
         {:else}
-            <GeneratedImages initialPrompt={formData} newImageGenerated={newImageGenerated} styles={styles} />
+            <GeneratedImages
+                initialPrompt={formData}
+                {newImageGenerated}
+                {styles}
+            />
         {/if}
     </div>
 
-    <ImageHistory newImageGenerated={newImageGenerated} styles={styles}/>
+    <ImageHistory {newImageGenerated} {styles} />
 </div>
