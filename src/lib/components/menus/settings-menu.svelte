@@ -1,8 +1,8 @@
 <script lang="ts">
-    import type { AdditionalSettings } from "$lib/types";
+    import type {AdditionalSettings} from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
-    import { type Writable, writable } from "svelte/store";
+    import {type Writable, writable} from "svelte/store";
 
     let showPopup = false;
     export let settings: Writable<AdditionalSettings>;
@@ -49,10 +49,10 @@
 
 {#if showPopup}
     <div
-        class="fixed top-0 left-0 w-full h-full bg-bg/[.7] flex items-center justify-center"
+            class="fixed top-0 left-0 w-full h-full bg-bg/[.7] flex items-center justify-center"
     >
         <div
-            class="bg-bgLight border border-border rounded-2xl relative p-12 flex flex-col"
+                class="bg-bgLight border border-border rounded-2xl relative p-12 flex flex-col"
         >
             <button on:click={closePopup} class="close-button">✕</button>
             <div class="option-group flex flex-col">
@@ -60,9 +60,9 @@
                 <div class="options-row">
                     {#each [1, 2, 3, 4] as variation}
                         <div
-                            class="option"
-                            class:selected={$selectedVariations === variation}
-                            on:click={() => handleVariationChange(variation)}
+                                class="option"
+                                class:selected={$selectedVariations === variation}
+                                on:click={() => handleVariationChange(variation)}
                         >
                             {variation}
                         </div>
@@ -72,11 +72,14 @@
             <div class="option-group flex flex-col">
                 <label class="settings-label">Format</label>
                 <div class="options-row">
-                    {#each [{ value: "1024x1024", label: "Quadrat" }, { value: "576x1024", label: "Portrait" }, { value: "1024x576", label: "Landschaft" }] as format}
+                    {#each [{value: "1024x1024", label: "Quadrat"}, {
+                        value: "576x1024",
+                        label: "Portrait"
+                    }, {value: "1024x576", label: "Landschaft"}] as format}
                         <div
-                            class="option"
-                            class:selected={$selectedFormat === format.value}
-                            on:click={() => handleFormatChange(format.value)}
+                                class="option"
+                                class:selected={$selectedFormat === format.value}
+                                on:click={() => handleFormatChange(format.value)}
                         >
                             {format.label}
                         </div>
@@ -86,16 +89,17 @@
             <div class="option-group flex flex-col">
                 <label class="settings-label">Detail</label>
                 <input
-                    type="range"
-                    min="1"
-                    max="100"
-                    value="25"
-                    bind:this={detailInput}
+                        type="range"
+                        min="1"
+                        max="3"
+                        value="1"
+                        bind:this={detailInput}
                 />
             </div>
             <div class="self-end mt-8">
                 <PrimaryButton on:click={saveSelection}
-                    >Auswahl speichern</PrimaryButton
+                >Auswahl speichern
+                </PrimaryButton
                 >
             </div>
         </div>
