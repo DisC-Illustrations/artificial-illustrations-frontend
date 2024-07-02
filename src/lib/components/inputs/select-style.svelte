@@ -63,7 +63,7 @@
                         on:mouseleave={handleMouseLeave}
                 >
                     <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
-                    {#if hoveredStyle === style}
+                    {#if hoveredStyle === style && !showPopup}
                         <div class="tooltip">{style.prompt}</div>
                     {/if}
                 </div>
@@ -87,7 +87,7 @@
                                     on:mouseleave={handleMouseLeave}
                             >
                                 <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
-                                {#if hoveredStyle === style}
+                                {#if hoveredStyle === style && showPopup}
                                     <div class="tooltip">{style.prompt}</div>
                                 {/if}
                             </div>
@@ -159,7 +159,11 @@
         padding: 0.5rem;
         border-radius: 0.25rem;
         font-size: 0.8rem;
-        white-space: nowrap;
+        max-width: 200px;
+        width: max-content;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: center;
         z-index: 10;
     }
 </style>
