@@ -2,16 +2,11 @@
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-## Creating a project
+## Get started
 
-If you're seeing this, you've probably already done this step. Congrats!
-
+On macOS the default port 5000 is already in use by the system. Therefore you need to start this with the following command:
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+set VITE_AI_BACKEND_PORT=8080 && npm run dev
 ```
 
 ## Developing
