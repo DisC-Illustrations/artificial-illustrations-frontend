@@ -8,14 +8,36 @@
     export let palettes: Array<{ name: string; colors: Array<string> }> = [];
     export let selectedPalette: string;
     export let onSelect: (palette: string) => void;
+    export let onStrategySelect: (strategy: string) => void;
 
     let selectedPaletteId = writable<string | undefined>(undefined);
     let showPopup = false;
+    let selectedStrategy = writable<string>("");
+
+    const strategies = [
+        { value: "DirectPaletteStrategy", label: "Direkte Methode" },
+        { value: "InterpolatedPaletteStrategy", label: "Interpolations Methode" },
+        { value: "PosterizationStrategy", label: "Posterization Methode" },
+    ];
 
     function handleSelect(palette: string) {
         onSelect(palette);
         selectedPaletteId.set(palette);
         selectedPalette = palette;
+        
+        if (palette === undefined) {
+            selectedStrategy.set("");
+            onStrategySelect("");
+        } else if ($selectedStrategy === "") {
+            selectedStrategy.set(strategies[0].value);
+            onStrategySelect(strategies[0].value);
+        }
+    }
+
+    function handleStrategySelect() {
+        if (selectedPalette !== undefined) {
+            onStrategySelect($selectedStrategy);
+        }
     }
 
     selectedPaletteId.subscribe((value) => {
@@ -24,7 +46,8 @@
 
     onMount(() => {
         if (palettes && palettes.length > 0) {
-            handleSelect(palettes[0].name);
+            console.log("Palettes:", palettes);
+            handleSelect(undefined); // Default to "Zufällige Farben"
         } else {
             console.error("No palettes found");
         }
@@ -37,6 +60,8 @@
     function closePopup() {
         showPopup = false;
     }
+
+    $: isStrategyDisabled = selectedPalette === undefined;
 </script>
 
 <div class="">
@@ -64,7 +89,7 @@
                 class="{selectedPalette === undefined
                     ? 'bg-lightBlue'
                     : ''} py-4 px-8 rounded-2xl justify-center whitespace-nowrap items-center font-bold border border-lightBlue text-white transition-all active:scale-95 disabled:active:scale-100 duration-200 disabled:opacity-50"
-                >Zufällige Farben</button
+                >Keine Farbpalette</button
             >
         </div>
     </div>
@@ -97,6 +122,20 @@
                         {/each}
                     {/if}
                 </div>
+                
+                <div class="dropdown-container mt-8">
+                    <label for="strategySelect" class="strategy-label">Methode zur Anwendung der Farbpalette</label>
+                    <select id="strategySelect" bind:value={$selectedStrategy} on:change={handleStrategySelect} disabled={isStrategyDisabled}>
+                        {#if isStrategyDisabled}
+                            <option value="">Keine Methode</option>
+                        {:else}
+                            {#each strategies as strategy}
+                                <option value={strategy.value}>{strategy.label}</option>
+                            {/each}
+                        {/if}
+                    </select>
+                </div>
+
                 <div class="self-end mt-8">
                     <PrimaryButton on:click={closePopup}
                         >Auswahl Speichern</PrimaryButton
@@ -137,5 +176,25 @@
         flex: 1;
         height: 45px;
         width: 40px;
+    }
+
+    .dropdown-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .strategy-label {
+        font-size: 1rem;
+        color: theme('colors.text');
+    }
+
+    select {
+        width: 100%;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        background-color: theme('colors.bg');
+        color: theme('colors.text');
+        border: 1px solid theme('colors.text');
     }
 </style>

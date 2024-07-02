@@ -13,7 +13,10 @@ export const POST: RequestHandler = async ({request}) => {
             messages: [
                 {
                     role: 'system',
-                    content: 'Capture the essence of the following text in 2-3 fitting visual Elements and return them to be used in a Stable Diffusion model (e.g. a painting, rain, dark atmosphere).'
+                    content: `Extract three key visual elements from the following text article, summarizing each element in less than ten words. Focus on elements that best represent and can be effectively interpreted by a stable diffusion model for creating compelling and representative illustrations or covers.
+                    
+                    Format:
+                    "[First visual element]; [Second visual element]; [Third visual element];`
                 },
                 {role: 'user', content: prompt}
             ],

@@ -26,7 +26,6 @@
     let stylePrompt = "";
 
     let articleText = "";
-    let colorPalette = "palette1";
     let specificRequest = "";
 
     let settings = writable<AdditionalSettings>(new AdditionalSettings());
@@ -58,14 +57,26 @@
 
     // boolean to show/hide elements
     let loading = false;
-
+    
     //color palette
-    let palettes: { name: string; colors: Array<string> }[] = [];
-    let selectedPalette = "noPalette";
+    let colorPalette = "palette1";
+    let palettes: { name: string, colors: Array<string> }[] = [];
+    let selectedPalette = 'noPalette';
+    let selectedStrategy = "";
+
 
     function handlePaletteSelect(palette: string) {
         selectedPalette = palette;
+        if (palette === 'noPalette') {
+            selectedStrategy = "";
+        }
     }
+
+    function handleStrategySelect(strategy: string) {
+        selectedStrategy = strategy;
+        console.log("Selected strategy:", selectedStrategy);
+    }
+    
 
     function hexToRgb(hex: string): number[] {
         let bigint = parseInt(hex.slice(1), 16);
@@ -73,14 +84,16 @@
     }
 
     function getSelectedPaletteColors(): number[][] {
-        let palette = palettes.find((p) => p.name === selectedPalette);
+        if (selectedPalette === 'noPalette') {
+            return [];
+        }
+        let palette = palettes.find(p => p.name === selectedPalette);
         if (palette) {
-            return palette.colors
-                .map((color) => ({ rgb: hexToRgb(color) }))
-                .map((color) => [color.rgb[0], color.rgb[1], color.rgb[2]]);
+            return palette.colors.map(color => hexToRgb(color));
         }
         return [];
     }
+
 
     function handleFileUpload(event: any) {
         const file = event.target.files[0];
@@ -165,6 +178,7 @@
             // upscale: detailSetting,
             upscale: 1, // don't upscale for now
             color_palette: getSelectedPaletteColors(),
+            palette_strategy: selectedStrategy
         };
 
         imageData = `Generated image with text: ${articleText}, style: ${stylePrompt}, color palette: ${colorPalette}, specific request: ${specificRequest}`;
@@ -260,6 +274,7 @@
             {palettes}
             {selectedPalette}
             onSelect={handlePaletteSelect}
+            onStrategySelect={handleStrategySelect}
         />
         <div class="self-start mt-4">
             <SettingsMenu {settings} />
