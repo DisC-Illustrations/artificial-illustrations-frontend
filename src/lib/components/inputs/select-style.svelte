@@ -1,4 +1,3 @@
-<!-- SelectStyle.svelte -->
 <script lang="ts">
     import type { Style } from "$lib/types";
     import PrimaryButton from "$lib/components/buttons/primary-button.svelte";
@@ -11,6 +10,7 @@
 
     let selectedStyleId = writable<string | undefined>(undefined);
     let showPopup = false;
+    let hoveredStyle: Style | null = null;
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
@@ -20,6 +20,14 @@
             currentStyle.set(style);
             console.log("Style changed to: ", style);
         }
+    }
+
+    function handleMouseEnter(style: Style) {
+        hoveredStyle = style;
+    }
+
+    function handleMouseLeave() {
+        hoveredStyle = null;
     }
 
     selectedStyleId.subscribe(value => {
@@ -48,11 +56,16 @@
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
                 <div
-                        class="aspect-square rounded-2xl border cursor-pointer duration-200 w-20"
+                        class="aspect-square rounded-2xl border cursor-pointer duration-200 w-20 relative"
                         class:selected={$selectedStyleId === style.name}
                         on:click={() => handleStyleChange(style.name)}
+                        on:mouseenter={() => handleMouseEnter(style)}
+                        on:mouseleave={handleMouseLeave}
                 >
                     <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                    {#if hoveredStyle === style}
+                        <div class="tooltip">{style.prompt}</div>
+                    {/if}
                 </div>
             {/each}
         {/if}
@@ -67,11 +80,16 @@
                     {#if styles}
                         {#each styles as style}
                             <div
-                                    class="aspect-square rounded-2xl border cursor-pointer duration-200 w-24"
+                                    class="aspect-square rounded-2xl border cursor-pointer duration-200 w-24 relative"
                                     class:selected={$selectedStyleId === style.name}
                                     on:click={() => handleStyleChange(style.name)}
+                                    on:mouseenter={() => handleMouseEnter(style)}
+                                    on:mouseleave={handleMouseLeave}
                             >
                                 <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                                {#if hoveredStyle === style}
+                                    <div class="tooltip">{style.prompt}</div>
+                                {/if}
                             </div>
                         {/each}
                     {/if}
@@ -129,5 +147,19 @@
     .selected {
         border-color: theme('colors.lightBlue');
         border-width: 5px;
+    }
+
+    .tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        white-space: nowrap;
+        z-index: 10;
     }
 </style>
