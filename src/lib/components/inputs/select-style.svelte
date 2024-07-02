@@ -15,7 +15,6 @@
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
         const style = styles?.find(s => s.name === styleId);
-        console.log(style);
         if (style) {
             currentStyle.set(style);
             console.log("Style changed to: ", style);
@@ -49,6 +48,10 @@
     function closePopup() {
         showPopup = false;
     }
+
+    function getTooltipClass(index: number) {
+        return index < 4 ? 'tooltip-bottom' : 'tooltip-top';
+    }
 </script>
 
 <div class="container">
@@ -64,7 +67,7 @@
                 >
                     <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
                     {#if hoveredStyle === style && !showPopup}
-                        <div class="tooltip">{style.prompt}</div>
+                        <div class="tooltip tooltip-bottom">{style.prompt}</div>
                     {/if}
                 </div>
             {/each}
@@ -78,7 +81,7 @@
                 <button on:click={closePopup} class="close-button">✕</button>
                 <div class="grid grid-cols-4 gap-4 m-6">
                     {#if styles}
-                        {#each styles as style}
+                        {#each styles as style, index}
                             <div
                                     class="aspect-square rounded-2xl border cursor-pointer duration-200 w-24 relative"
                                     class:selected={$selectedStyleId === style.name}
@@ -88,7 +91,7 @@
                             >
                                 <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
                                 {#if hoveredStyle === style && showPopup}
-                                    <div class="tooltip">{style.prompt}</div>
+                                    <div class={`tooltip ${getTooltipClass(index)}`}>{style.prompt}</div>
                                 {/if}
                             </div>
                         {/each}
@@ -151,7 +154,6 @@
 
     .tooltip {
         position: absolute;
-        bottom: 100%;
         left: 50%;
         transform: translateX(-50%);
         background-color: rgba(0, 0, 0, 0.8);
@@ -165,5 +167,15 @@
         white-space: normal;
         text-align: center;
         z-index: 10;
+    }
+
+    .tooltip-top {
+        bottom: 100%;
+        margin-bottom: 5px;
+    }
+
+    .tooltip-bottom {
+        top: 100%;
+        margin-top: 5px;
     }
 </style>
