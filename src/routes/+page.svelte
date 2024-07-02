@@ -167,7 +167,7 @@
                 <LoadingCircleGradient/>
             </div>
         {:else}
-            <GeneratedImages initialPrompt={formData}/>
+            <GeneratedImages initialPrompt={formData} styles={styles}/>
         {/if}
     </div>
 
@@ -219,5 +219,5 @@
         <PrimaryButton on:click={generateImages}>Bilder generieren</PrimaryButton>
     </div>
 
-    <ImageHistory/>
+    <ImageHistory styles={styles}/>
 </div>

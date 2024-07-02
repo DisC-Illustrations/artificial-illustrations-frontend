@@ -1,9 +1,17 @@
 <script lang="ts">
-    import { createEventDispatcher } from 'svelte';
+    import {createEventDispatcher, onMount} from 'svelte';
     import DownloadButton from '$lib/components/buttons/download-button.svelte';
-    import type { GeneratedImage } from '$lib/types';
+    import type {GeneratedImage} from '$lib/types';
+    import {ResourceLoader} from '$lib/utils/resource_loader';
+    import type {Style} from "$lib/types";
 
     export let image: GeneratedImage;
+    export let styles: Style[] = [];
+
+    function getStyleFromPrompt(prompt: string): Style | undefined {
+        console.log(styles);
+        return styles.find(style => prompt.includes(style.prompt));
+    }
 
     const dispatch = createEventDispatcher();
 
@@ -36,12 +44,27 @@
                 <p>{image.negative_prompt}</p>
             {/if}
 
+            {#if getStyleFromPrompt(image.prompt) !== undefined}
+                <div class="my-3">
+                    <h2>Style</h2>
+                    <img src={getStyleFromPrompt(image.prompt)?.preview_src} alt="style"
+                         class="object-cover rounded-[10px] aspect-square w-20"/>
+                    <p class="italic">{getStyleFromPrompt(image.prompt)?.prompt}</p>
+                </div>
+            {/if}
+
             <DownloadButton on:click={handleDownload}>Download</DownloadButton>
         </div>
     </div>
 </div>
 
 <style>
+    h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
     .popup-overlay {
         position: fixed;
         top: 0;

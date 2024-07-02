@@ -2,8 +2,10 @@
 <script lang="ts">
     import { onMount } from 'svelte';
     import { getImageIds, getImage } from '$lib/api';
-    import type { GeneratedImage } from '$lib/types';
+    import type {GeneratedImage, Style} from '$lib/types';
     import ImagePopup from '$lib/components/image/image-popup.svelte';
+
+    export let styles: Style[] = [];
 
     let imageIds: number[] = [];
     let images: GeneratedImage[] = [];
@@ -62,7 +64,7 @@
 </aside>
 
 {#if selectedImage}
-    <ImagePopup image={selectedImage} on:close={closePopup} />
+    <ImagePopup image={selectedImage} styles={styles} on:close={closePopup} />
 {/if}
 
 <style>

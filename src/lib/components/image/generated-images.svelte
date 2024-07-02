@@ -1,10 +1,11 @@
 <script lang="ts">
     import { generate, getImage } from '$lib/api';
     import LoadingWave from '../loading/loading-wave.svelte';
-    import type { Prompt, GeneratedImage } from '$lib/types';
+    import type {Prompt, GeneratedImage, Style} from '$lib/types';
     import ImagePopup from '$lib/components/image/image-popup.svelte';
 
     export let initialPrompt: Prompt | null = null;
+    export let styles: Style[] = [];
 
     let generatedImages: GeneratedImage[] = [];
     let error: string | null = null;
@@ -95,7 +96,7 @@
 {/if}
 
 {#if selectedImage}
-    <ImagePopup image={selectedImage} on:close={closePopup} />
+    <ImagePopup image={selectedImage} styles={styles} on:close={closePopup} />
 {/if}
 
 <style>
