@@ -15,6 +15,7 @@
     import { onMount } from "svelte";
     import { writable } from "svelte/store";
     import TextInput from "$lib/components/inputs/text-input.svelte";
+    import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
 
     const newImageGenerated: Writable<boolean> = writable(false);
 
@@ -180,14 +181,14 @@
     });
 </script>
 
-<div class="grid grid-cols-3 gap-12">
+<div class="grid grid-cols-3 gap-12 h-full">
     <div
         class="bg-bgLight rounded-2xl overflow-hidden relative flex items-center justify-center flex-col p-8"
     >
         <img
             src="/images/bg.png"
             alt="background pattern"
-            class="object-cover absolute"
+            class="object-cover absolute h-[90vh]"
         />
         <span
             class="font-bold text-[30px] text-transparent bg-gradient-to-r to-darkBlue from-lightBlue bg-clip-text z-20"
@@ -260,29 +261,16 @@
         </div>
 
         <div class="self-end mt-auto">
-            <PrimaryButton on:click={generateImages}
-                >Bilder generieren</PrimaryButton
-            >
+            <ImageHistory {newImageGenerated} {styles} />
+            {#if loading}
+                <div class="image-wrapper">
+                    <LoadingCircleGradient />
+                </div>
+            {:else}
+                <PrimaryButton on:click={generateImages}
+                    >Bilder generieren</PrimaryButton
+                >
+            {/if}
         </div>
     </div>
-</div>
-
-<!-- margin (ml-28) for history bar, needs refactoring -->
-<div class="container bg-bg text-text font-sans p-8 space-y-4 ml-28">
-    <div class="image-container">
-        <!-- show images here if available -->
-        {#if loading}
-            <div class="image-wrapper">
-                <LoadingCircleGradient />
-            </div>
-        {:else}
-            <GeneratedImages
-                initialPrompt={formData}
-                {newImageGenerated}
-                {styles}
-            />
-        {/if}
-    </div>
-
-    <ImageHistory {newImageGenerated} {styles} />
 </div>

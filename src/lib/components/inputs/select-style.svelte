@@ -15,7 +15,7 @@
 
     function handleStyleChange(styleId: string) {
         selectedStyleId.set(styleId);
-        const style = styles?.find(s => s.name === styleId);
+        const style = styles?.find((s) => s.name === styleId);
         if (style) {
             currentStyle.set(style);
             console.log("Style changed to: ", style);
@@ -30,7 +30,7 @@
         hoveredStyle = null;
     }
 
-    selectedStyleId.subscribe(value => {
+    selectedStyleId.subscribe((value) => {
         console.log(value);
     });
 
@@ -51,22 +51,26 @@
     }
 
     function getTooltipClass(index: number) {
-        return index < 4 ? 'tooltip-bottom' : 'tooltip-top';
+        return index < 4 ? "tooltip-bottom" : "tooltip-top";
     }
 </script>
 
-<div class="container">
+<div class="">
     <div class="grid gap-6 w-full md:grid-cols-4 styling">
         {#if styles && styles.length > 0}
             {#each styles.slice(0, 3) as style}
                 <div
-                        class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200 w-20 relative"
-                        class:selected={$selectedStyleId === style.name}
-                        on:click={() => handleStyleChange(style.name)}
-                        on:mouseenter={() => handleMouseEnter(style)}
-                        on:mouseleave={handleMouseLeave}
+                    class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200 w-20 relative"
+                    class:selected={$selectedStyleId === style.name}
+                    on:click={() => handleStyleChange(style.name)}
+                    on:mouseenter={() => handleMouseEnter(style)}
+                    on:mouseleave={handleMouseLeave}
                 >
-                    <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                    <img
+                        src={style.preview_src}
+                        alt="style"
+                        class="w-full h-full object-cover rounded-[10px]"
+                    />
                     {#if hoveredStyle === style && !showPopup}
                         <div class="tooltip tooltip-bottom">{style.prompt}</div>
                     {/if}
@@ -89,15 +93,23 @@
                     {#if styles}
                         {#each styles as style, index}
                             <div
-                                    class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200 w-24 relative"
-                                    class:selected={$selectedStyleId === style.name}
-                                    on:click={() => handleStyleChange(style.name)}
-                                    on:mouseenter={() => handleMouseEnter(style)}
-                                    on:mouseleave={handleMouseLeave}
+                                class="aspect-square rounded-2xl border border-transparent cursor-pointer duration-200 w-24 relative"
+                                class:selected={$selectedStyleId === style.name}
+                                on:click={() => handleStyleChange(style.name)}
+                                on:mouseenter={() => handleMouseEnter(style)}
+                                on:mouseleave={handleMouseLeave}
                             >
-                                <img src={style.preview_src} alt="style" class="w-full h-full object-cover rounded-[10px]" />
+                                <img
+                                    src={style.preview_src}
+                                    alt="style"
+                                    class="w-full h-full object-cover rounded-[10px]"
+                                />
                                 {#if hoveredStyle === style && showPopup}
-                                    <div class={`tooltip ${getTooltipClass(index)}`}>{style.prompt}</div>
+                                    <div
+                                        class={`tooltip ${getTooltipClass(index)}`}
+                                    >
+                                        {style.prompt}
+                                    </div>
                                 {/if}
                             </div>
                         {/each}
@@ -122,11 +134,11 @@
         border: none;
         font-size: 1.5rem;
         cursor: pointer;
-        color: theme('colors.text');
+        color: theme("colors.text");
     }
 
     .selected {
-        border-color: theme('colors.lightBlue');
+        border-color: theme("colors.lightBlue");
         border-width: 5px;
     }
 
