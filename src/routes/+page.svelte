@@ -32,7 +32,7 @@
     let settings = writable<AdditionalSettings>(new AdditionalSettings());
     let variationSetting: number = 1;
     let resolutionSetting: string = "1024x1024";
-    let detailSetting: number = 2;
+    let detailSetting: number = 1;
     let imageData = "";
 
     $: styleSelection.subscribe((value) => {
@@ -161,7 +161,7 @@
             num_images: variationSetting,
             image_size: 1024,
             aspect_ratio: aspectRatio,
-            steps: 25,
+            steps: 30,
             upscale: detailSetting,
             color_palette: getSelectedPaletteColors(),
         };
