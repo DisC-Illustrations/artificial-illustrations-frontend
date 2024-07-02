@@ -4,8 +4,26 @@
     import { getImageIds, getImage } from '$lib/api';
     import type {GeneratedImage, Style} from '$lib/types';
     import ImagePopup from '$lib/components/image/image-popup.svelte';
+    import {writable, type Writable} from "svelte/store";
 
+    export let newImageGenerated: Writable<boolean> = writable(false);
     export let styles: Style[] = [];
+
+    $: if ($newImageGenerated) {
+        console.log('New image generated, reloading image history');
+        newImageGenerated.set(false);
+        reloadImages();
+    }
+
+    async function reloadImages() {
+        try {
+            imageIds = await getImageIds();
+            await loadImages();
+        } catch (err) {
+            error = 'Error reloading image history';
+            console.error(err);
+        }
+    }
 
     let imageIds: number[] = [];
     let images: GeneratedImage[] = [];

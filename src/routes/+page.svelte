@@ -13,8 +13,9 @@
     import ColorPaletteSelector from '$lib/components/inputs/select-colorPalette.svelte';
     import ImageHistory from "$lib/components/image/image-history.svelte";
     import {onMount} from "svelte";
-    import {writable} from "svelte/store";
+    import {type Writable, writable} from "svelte/store";
 
+    const newImageGenerated: Writable<boolean> = writable(false);
 
     let formData: Prompt | null = null;
 
@@ -167,7 +168,7 @@
                 <LoadingCircleGradient/>
             </div>
         {:else}
-            <GeneratedImages initialPrompt={formData} styles={styles}/>
+            <GeneratedImages initialPrompt={formData} newImageGenerated={newImageGenerated} styles={styles}/>
         {/if}
     </div>
 
@@ -219,5 +220,5 @@
         <PrimaryButton on:click={generateImages}>Bilder generieren</PrimaryButton>
     </div>
 
-    <ImageHistory styles={styles}/>
+    <ImageHistory newImageGenerated={newImageGenerated} styles={styles}/>
 </div>

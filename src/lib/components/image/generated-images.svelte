@@ -1,10 +1,12 @@
 <script lang="ts">
-    import { generate, getImage } from '$lib/api';
+    import {generate, getImage} from '$lib/api';
     import LoadingWave from '../loading/loading-wave.svelte';
     import type {Prompt, GeneratedImage, Style} from '$lib/types';
     import ImagePopup from '$lib/components/image/image-popup.svelte';
+    import {type Writable, writable} from "svelte/store";
 
     export let initialPrompt: Prompt | null = null;
+    export let newImageGenerated: Writable<boolean> = writable(false);
     export let styles: Style[] = [];
 
     let generatedImages: GeneratedImage[] = [];
@@ -30,6 +32,7 @@
 
             generatedImages = results;
             loading = false;
+            newImageGenerated.set(true);
         } catch (err) {
             loading = false;
             error = 'Error generating images';
@@ -77,7 +80,7 @@
 
 {#if loading}
     <div class="image-wrapper">
-        <LoadingWave />
+        <LoadingWave/>
     </div>
 {:else if generatedImages.length === 0}
     <div class="image-wrapper">
@@ -96,7 +99,7 @@
 {/if}
 
 {#if selectedImage}
-    <ImagePopup image={selectedImage} styles={styles} on:close={closePopup} />
+    <ImagePopup image={selectedImage} styles={styles} on:close={closePopup}/>
 {/if}
 
 <style>
