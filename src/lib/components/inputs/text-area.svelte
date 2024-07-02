@@ -1,12 +1,11 @@
 <script lang="ts">
-    export let style = "";
+    export let style = "h-full";
     export let label = "";
     export let name: string;
     export let required = false;
     export let value: string | undefined | null;
     export let placeholder = "";
     export let error: string[] | undefined = undefined;
-    export let rows = 15;
 </script>
 
 <div class={style}>
@@ -24,9 +23,8 @@
     <textarea
         bind:value
         {placeholder}
-        {rows}
         class="block w-full bg-bgLight text-sm placeholder:text-border leading-none relative
-        border border-border rounded-2xl focus:ring-lightBlue py-3 px-4 focus:border-lightBlue"
+        border border-border rounded-2xl focus:ring-lightBlue py-3 px-4 focus:border-lightBlue h-full"
     />
 
     <p class={`${error ? "visible" : "hidden"} text-xs text-red-600 mt-2`}>

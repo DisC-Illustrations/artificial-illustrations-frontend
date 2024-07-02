@@ -200,7 +200,7 @@
             zu visualisieren.</span
         >
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col h-full">
         <div class="flex items-center gap-2 mb-2">
             <label for="articleText">Artikel eingeben</label>
             <Tooltip
@@ -212,7 +212,6 @@
             name="articleText"
             placeholder="Artikel einfügen oder Datei hochladen"
             value={articleText}
-            rows={15}
         ></Textarea>
         <input
             type="file"
