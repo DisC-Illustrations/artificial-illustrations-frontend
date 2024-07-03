@@ -4,6 +4,7 @@
     import type { GeneratedImage, Style } from "$lib/types";
     import { writable, type Writable } from "svelte/store";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
+    import DownloadButton from "$lib/components/buttons/download-button.svelte";
 
     export let newImageGenerated: Writable<boolean> = writable(false);
     export let styles: Style[] = [];
@@ -94,7 +95,7 @@
                 {:else}
                     {#each images as image (image.id)}
                         <div
-                                class="mb-4 cursor-pointer transition-all duration-200 hover:opacity-80"
+                                class="mb-4 cursor-pointer transition-all duration-200 hover:opacity-80 relative group"
                                 on:click={() => selectImage(image)}
                         >
                             <img
@@ -102,7 +103,11 @@
                                     alt="Generated image {image.id}"
                                     class="w-full h-auto object-cover rounded-lg"
                                     style="aspect-ratio: 1;"
+                                    class:selected={selectedImage && selectedImage.id === image.id}
                             />
+                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg">
+                                ID: {image.id}
+                            </div>
                         </div>
                     {/each}
                 {/if}
@@ -127,13 +132,11 @@
                             {@const style = getStyleFromPrompt(selectedImage.prompt)}
                             {#if style}
                                 <img src={style.preview_src} alt="style" class="w-16 h-16 object-cover rounded-lg mb-2"/>
-                                <p class="italic">{style.prompt}</p>
+                                <p class="italic mb-2">{style.prompt}</p>
                             {/if}
                         {/if}
 
-                        <button on:click={handleDownload} class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-blue-600 transition-colors">
-                            Download
-                        </button>
+                        <DownloadButton on:click={handleDownload}>Download</DownloadButton>
                     </div>
                 </div>
             {:else}
@@ -155,5 +158,9 @@
         font-size: 1.5rem;
         cursor: pointer;
         color: theme("colors.text");
+    }
+
+    .selected {
+        border: 3px solid theme("colors.lightBlue");
     }
 </style>
