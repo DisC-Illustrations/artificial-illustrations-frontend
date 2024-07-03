@@ -1,9 +1,7 @@
-<!-- ImageHistorySidebar.svelte -->
 <script lang="ts">
     import { onMount } from "svelte";
     import { getImageIds, getImage } from "$lib/api";
     import type { GeneratedImage, Style } from "$lib/types";
-    import ImagePopup from "$lib/components/image/image-popup.svelte";
     import { writable, type Writable } from "svelte/store";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
 
@@ -38,6 +36,9 @@
             imageIds = await getImageIds();
             console.log("Image IDs:", imageIds);
             await loadImages();
+            if (images.length > 0) {
+                selectedImage = images[0]; // Select the first image by default
+            }
         } catch (err) {
             error = "Error loading image history";
             console.error(err);
@@ -51,12 +52,21 @@
         images = await Promise.all(promises);
     }
 
-    function openPopup(image: GeneratedImage) {
+    function selectImage(image: GeneratedImage) {
         selectedImage = image;
     }
 
-    function closePopup() {
-        selectedImage = null;
+    function getStyleFromPrompt(prompt: string): Style | undefined {
+        return styles.find(style => prompt.includes(style.prompt));
+    }
+
+    function handleDownload() {
+        if (selectedImage) {
+            const link = document.createElement('a');
+            link.href = `data:image/png;base64,${selectedImage.image}`;
+            link.download = `generated-image-${selectedImage.id}.png`;
+            link.click();
+        }
     }
 
     $: historyOpen = false;
@@ -68,46 +78,71 @@
 <SecondaryButton on:click={toggleHistory}>Galerie ansehen</SecondaryButton>
 
 {#if historyOpen}
-    <div
-        class="fixed top-0 left-0 bg-bg/[.7] flex items-center justify-center z-50 w-full h-full"
-    >
-        <div
-            class="bg-bgLight border border-border rounded-2xl relative p-12 flex flex-col w-[90vw] h-[90vh]"
-        >
+    <div class="fixed inset-0 bg-bg/[.7] flex items-center justify-center z-50">
+        <div class="bg-bgLight border border-border rounded-2xl relative p-6 flex w-[80vw] h-[80vh]">
             <button on:click={toggleHistory} class="close-button">✕</button>
-            {#if loading}
-                <p>Loading image history...</p>
-            {:else if error}
-                <p>{error}</p>
-            {:else if images.length === 0}
-                <p>No images in history</p>
-            {:else}
-                <div class="image-list">
+
+            <!-- Scrollbare Seitenleiste -->
+            <div class="w-1/6 pr-4 overflow-y-auto border-r border-border">
+                <h2 class="text-xl font-bold mb-4">Image History</h2>
+                {#if loading}
+                    <p>Loading image history...</p>
+                {:else if error}
+                    <p>{error}</p>
+                {:else if images.length === 0}
+                    <p>No images in history</p>
+                {:else}
                     {#each images as image (image.id)}
                         <div
-                            class="image-item"
-                            on:click={() => openPopup(image)}
+                                class="mb-4 cursor-pointer transition-all duration-200 hover:opacity-80"
+                                on:click={() => selectImage(image)}
                         >
                             <img
-                                src="data:image/png;base64,{image.image}"
-                                alt="Generated image {image.id}"
+                                    src="data:image/png;base64,{image.image}"
+                                    alt="Generated image {image.id}"
+                                    class="w-full h-auto object-cover rounded-lg"
+                                    style="aspect-ratio: 1;"
                             />
-                            <div class="image-info">
-                                <p class="image-id">ID: {image.id}</p>
-                                <p class="image-prompt">
-                                    {image.prompt.slice(0, 30)}...
-                                </p>
-                            </div>
                         </div>
                     {/each}
+                {/if}
+            </div>
+
+            <!-- Hauptbereich mit Bildvorschau und Detailinformationen -->
+            {#if selectedImage}
+                <div class="flex-1 pl-6 flex">
+                    <div class="w-2/3 pr-6">
+                        <img
+                                src="data:image/png;base64,{selectedImage.image}"
+                                alt="Selected image {selectedImage.id}"
+                                class="w-full h-auto object-contain rounded-lg mb-4"
+                        />
+                    </div>
+                    <div class="w-1/3">
+                        <h2 class="text-xl font-bold mb-2">Bild {selectedImage.id}</h2>
+                        <p class="mb-4">{selectedImage.prompt}</p>
+
+                        <h3 class="text-lg font-semibold mb-2">Stil</h3>
+                        {#if getStyleFromPrompt(selectedImage.prompt)}
+                            {@const style = getStyleFromPrompt(selectedImage.prompt)}
+                            {#if style}
+                                <img src={style.preview_src} alt="style" class="w-16 h-16 object-cover rounded-lg mb-2"/>
+                                <p class="italic">{style.prompt}</p>
+                            {/if}
+                        {/if}
+
+                        <button on:click={handleDownload} class="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-blue-600 transition-colors">
+                            Download
+                        </button>
+                    </div>
+                </div>
+            {:else}
+                <div class="flex-1 pl-6 flex items-center justify-center">
+                    <p class="text-lg text-gray-500">Select an image to view details</p>
                 </div>
             {/if}
         </div>
     </div>
-{/if}
-
-{#if selectedImage}
-    <ImagePopup image={selectedImage} {styles} on:close={closePopup} />
 {/if}
 
 <style>
@@ -120,59 +155,5 @@
         font-size: 1.5rem;
         cursor: pointer;
         color: theme("colors.text");
-    }
-    .image-history-sidebar {
-        position: fixed;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 100px;
-        background-color: theme("colors.bg");
-        border-right: 1px solid theme("colors.darkBlue");
-        overflow-y: auto;
-        padding: 1rem;
-    }
-
-    .image-list {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .image-item {
-        cursor: pointer;
-        border: 1px solid theme("colors.lightBlue");
-        border-radius: 0.5rem;
-        overflow: hidden;
-        transition: all 0.2s ease-in-out;
-    }
-
-    .image-item:hover {
-        transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .image-item img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
-
-    .image-info {
-        padding: 0.5rem;
-    }
-
-    .image-id {
-        font-size: 0.8rem;
-        color: theme("colors.text");
-        opacity: 0.7;
-    }
-
-    .image-prompt {
-        font-size: 0.9rem;
-        color: theme("colors.text");
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 </style>
