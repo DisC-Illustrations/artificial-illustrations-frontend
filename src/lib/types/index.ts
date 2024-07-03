@@ -21,7 +21,8 @@ export interface Prompt {
     steps?: number;
     model?: string;
     upscale?: number;
-    color_palette?: number[][]
+    color_palette?: number[][];
+    palette_strategy?: string;
 }
 
 export interface Style {
