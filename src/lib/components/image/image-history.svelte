@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { getImageIds, getImage } from "$lib/api";
-    import type { GeneratedImage, Style } from "$lib/types";
-    import { writable, type Writable } from "svelte/store";
+    import {onMount} from "svelte";
+    import {getImageIds, getImage} from "$lib/api";
+    import type {GeneratedImage, Style} from "$lib/types";
+    import {writable, type Writable} from "svelte/store";
     import SecondaryButton from "$lib/components/buttons/secondary-button.svelte";
     import DownloadButton from "$lib/components/buttons/download-button.svelte";
 
@@ -71,6 +71,7 @@
     }
 
     $: historyOpen = false;
+
     function toggleHistory() {
         historyOpen = !historyOpen;
     }
@@ -115,23 +116,26 @@
 
             <!-- Hauptbereich mit Bildvorschau und Detailinformationen -->
             {#if selectedImage}
-                <div class="flex-1 pl-6 flex">
-                    <div class="w-2/3 pr-6">
-                        <img
-                                src="data:image/png;base64,{selectedImage.image}"
-                                alt="Selected image {selectedImage.id}"
-                                class="w-full h-auto object-contain rounded-lg mb-4"
-                        />
+                <div class="flex-1 pl-6 flex h-full">
+                    <div class="w-2/3 pr-6 flex flex-col">
+                        <div class="flex-grow overflow-hidden flex items-center justify-center">
+                            <img
+                                    src="data:image/png;base64,{selectedImage.image}"
+                                    alt="Selected image {selectedImage.id}"
+                                    class="max-w-full max-h-full object-contain rounded-lg"
+                            />
+                        </div>
                     </div>
-                    <div class="w-1/3">
+                    <div class="w-1/3 overflow-y-auto">
                         <h2 class="text-xl font-bold mb-2">Bild {selectedImage.id}</h2>
                         <p class="mb-4">{selectedImage.prompt}</p>
 
-                        <h3 class="text-lg font-semibold mb-2">Stil</h3>
                         {#if getStyleFromPrompt(selectedImage.prompt)}
+                            <h3 class="text-lg font-semibold mb-2">Stil</h3>
                             {@const style = getStyleFromPrompt(selectedImage.prompt)}
                             {#if style}
-                                <img src={style.preview_src} alt="style" class="w-16 h-16 object-cover rounded-lg mb-2"/>
+                                <img src={style.preview_src} alt="style"
+                                     class="w-16 h-16 object-cover rounded-lg mb-2"/>
                                 <p class="italic mb-2">{style.prompt}</p>
                             {/if}
                         {/if}
