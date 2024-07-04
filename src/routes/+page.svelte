@@ -196,12 +196,8 @@
     });
 </script>
 
-<div class="flex items-center justify-center h-1/5">
-    <GeneratedImages initialPrompt={formData}
-                     newImageGenerated={newImageGenerated}
-                        styles={styles} />
-</div>
 <div class="grid grid-cols-3 gap-12 h-4/5">
+    <!--
     <div
         class="bg-bgLight rounded-2xl overflow-hidden relative flex items-center justify-center flex-col p-8"
     >
@@ -220,6 +216,7 @@
             zu visualisieren.</span
         >
     </div>
+    -->
     <div class="flex flex-col h-full">
         <div class="flex items-center gap-2 mb-2">
             <label for="articleText">Artikel eingeben</label>
@@ -293,6 +290,13 @@
                     >Bilder generieren</PrimaryButton
                 >
             {/if}
+        </div>
+    </div>
+    <div class="flex flex-col h-full items-center justify-center">
+        <div class="flex items max-h-[90vh] overflow-auto">
+            <GeneratedImages initialPrompt={formData}
+                             newImageGenerated={newImageGenerated}
+                             styles={styles} />
         </div>
     </div>
 </div>

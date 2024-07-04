@@ -4,6 +4,7 @@
     import type {Prompt, GeneratedImage, Style} from '$lib/types';
     import ImagePopup from '$lib/components/image/image-popup.svelte';
     import {type Writable, writable} from "svelte/store";
+    import DownloadButton from "$lib/components/buttons/download-button.svelte";
 
     export let initialPrompt: Prompt | null = null;
     export let newImageGenerated: Writable<boolean> = writable(false);
@@ -67,6 +68,15 @@
         selectedImage = null;
     }
 
+    function handleDownload() {
+        if (selectedImage) {
+            const link = document.createElement('a');
+            link.href = `data:image/png;base64,${selectedImage.image}`;
+            link.download = `generated-image-${selectedImage.id}.png`;
+            link.click();
+        }
+    }
+
     $: {
         if (initialPrompt) {
             handleGenerate(initialPrompt);
@@ -91,8 +101,7 @@
         {#each generatedImages as image (image.id)}
             <div class="image-container" on:click={() => openPopup(image)}>
                 <img src="data:image/png;base64,{image.image}" alt="Prompt: {image.prompt}">
-                <p>ID: {image.id}</p>
-                <p>Prompt: {image.prompt}</p>
+                <DownloadButton on:click={handleDownload}>Download</DownloadButton>
             </div>
         {/each}
     </div>
@@ -111,18 +120,26 @@
     }
 
     .image-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
 
     .image-container {
-        border: 1px solid theme('colors.lightBlue');
-        padding: 1rem;
         cursor: pointer;
+        padding: 10px;
+        border: solid #9ca3af 1px;
+        background-color: #323232;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        border-radius: 25px;
     }
 
     .image-container img {
         height: max-content;
+        border-radius: 16px;
     }
 </style>

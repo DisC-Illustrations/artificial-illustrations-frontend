@@ -25,9 +25,9 @@
     .wave {
         width: 5px;
         height: 100px;
-        /* background: linear-gradient(45deg, cyan, #fff); */
+        background: linear-gradient(45deg, theme("colors.lightBlue"), theme("colors.darkBlue"));
         /* fidl colors */
-        background: linear-gradient(45deg, #FFEE0B, #00AB96);
+        /* background: linear-gradient(45deg, #FFEE0B, #00AB96); */
         margin: 10px;
         animation: wave 1s linear infinite;
         border-radius: 20px;
