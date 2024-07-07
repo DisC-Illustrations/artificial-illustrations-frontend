@@ -13,10 +13,15 @@ export const POST: RequestHandler = async ({request}) => {
             messages: [
                 {
                     role: 'system',
-                    content: `Extract three key visual elements from the following text article, summarizing each element in less than ten words. Focus on elements that best represent and can be effectively interpreted by a stable diffusion model for creating compelling and representative illustrations or covers.
-                    
-                    Format:
-                    "[First visual element]; [Second visual element]; [Third visual element];`
+                    content: `Extract FIVE abstract, symbolic VISUAL ELEMENTS from the article, each representing a MAIN ASPECT and together capturing the article's ESSENCE.
+
+IMPORTANT:
+- Each visual element should be a CONCRETE OBJECT OR WELL-KNOWN SYMBOL.
+- AVOID CONTEXT-SPECIFIC TERMS or AMBIGUOUS DESCRIPTIONS!
+
+FORMAT:"[First element]; [Second element]; [Third element]; [Fourth element]; [Fifth element]".
+Note: Each element should be IN ENGLISH and ABOUT THREE WORDS.
+`
                 },
                 {role: 'user', content: prompt}
             ],
