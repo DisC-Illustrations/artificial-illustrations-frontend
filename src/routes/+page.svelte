@@ -171,12 +171,13 @@
 
         let prompt: Prompt = {
             prompt: promptText,
+            negative_prompt: "text, watermark",
             num_images: variationSetting,
             image_size: 1024,
             aspect_ratio: aspectRatio,
             steps: 30,
             // upscale: detailSetting,
-            upscale: 1, // don't upscale for now
+            upscale: detailSetting,
             color_palette: getSelectedPaletteColors(),
             palette_strategy: selectedStrategy
         };
