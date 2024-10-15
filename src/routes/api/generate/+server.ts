@@ -1,27 +1,20 @@
 import type {RequestHandler} from '@sveltejs/kit';
 import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { env } from '$env/dynamic/private';
 
 export const POST: RequestHandler = async ({request}) => {
     const {prompt} = await request.json();
 
     try {
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: 'gpt-4',
+            model: 'gpt-4o', // Ändern Sie dies zu einem gültigen Modellnamen
             messages: [
                 {
                     role: 'system',
-                    content: `Extract FIVE abstract, symbolic VISUAL ELEMENTS from the article, each representing a MAIN ASPECT and together capturing the article's ESSENCE.
+                    content: `Extract three key visual elements from the following text article, summarizing each element in less than ten words. Focus on elements that best represent and can be effectively interpreted by a stable diffusion model for creating compelling and representative illustrations or covers.
 
-IMPORTANT:
-- Each visual element should be a CONCRETE OBJECT OR WELL-KNOWN SYMBOL.
-- AVOID CONTEXT-SPECIFIC TERMS or AMBIGUOUS DESCRIPTIONS!
-
-FORMAT:"[First element]; [Second element]; [Third element]; [Fourth element]; [Fifth element]".
-Note: Each element should be IN ENGLISH and ABOUT THREE WORDS.
-`
+                    Format:
+                    "[First visual element]; [Second visual element]; [Third visual element];`
                 },
                 {role: 'user', content: prompt}
             ],
@@ -32,14 +25,14 @@ Note: Each element should be IN ENGLISH and ABOUT THREE WORDS.
             presence_penalty: 0,
         }, {
             headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Authorization': `Bearer ${env.OPENAI_API_KEY}`, // Verwenden Sie den importierten 'env'
                 'Content-Type': 'application/json'
             }
         });
 
         return new Response(JSON.stringify({text: response.data.choices[0].message.content}), {status: 200});
-    } catch (error) {
-        console.error('Error communicating with OpenAI API:', error);
-        return new Response(JSON.stringify({error: 'Error communicating with OpenAI API'}), {status: 500});
+    } catch (error: Error | any) {
+        console.error('Fehler bei der Kommunikation mit der OpenAI API:', error.response?.data || error.message);
+        return new Response(JSON.stringify({error: error.response?.data || error.message}), {status: 500});
     }
 };
